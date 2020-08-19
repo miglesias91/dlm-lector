@@ -108,3 +108,4 @@ twitter.keys
 modelos/
 *.png
 *.jpg
+.vscode/
