@@ -1,2 +1,2 @@
-# dicenlosmedios 🇦🇷
-procesamiento y organización de datos existentes en los medios de comunicación digital argentinos.
+# dlm-lector 🇦🇷
+lector de https://github.com/miglesias91/dicenlosmedios
