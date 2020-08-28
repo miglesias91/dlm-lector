@@ -29,7 +29,7 @@ class Kiosco:
         urls = [{'url': n.url, 'cat': n.categoria} for n in diario.noticias]
 
         # guardo las noticias con clave=YYYMMDD particion=HHMM
-        hoy_hms = int(datetime.datetime.today().strftime("%H%M%S"))
+        hoy_hms = int((datetime.datetime.today() - datetime.timedelta(hours=3)).strftime("%H%M%S"))
         item = {'fecha': hoy, 'hora': hoy_hms, 'noticias': noticias, 'urls': urls}
 
         rta = tabla.put_item(Item = item)
