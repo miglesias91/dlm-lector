@@ -12,28 +12,39 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class Infobae(Diario):
 
     def __init__(self):
         Diario.__init__(self, "infobae")
 
-    def leer(self, fechas = {}, categorias = []):
+    def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
-
         tag_regexp = re.compile(r'<[^>]+>')
-        for entrada in fp.parse(self.feed_noticias).entries:
-            url = entrada.link
-            if kiosco.contar_noticias(diario=self.etiqueta, url=url): # si existe ya la noticia (url), no la decargo
-               continue      
-            titulo = entrada.title
-            texto = re.sub(tag_regexp,' ',entrada.content[0].value)
+
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
+        entradas = fp.parse(self.feed_noticias).entries[0:70]
+
+        print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
+
+        i = 0
+        for entrada in entradas:
+            i += 1
+
+            url = str(entrada.link)
+            
+            if url in urls_existentes:
+                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                continue
+
+            print("parseando noticia " + str(i) + "/" + str(len(entradas)))
+            titulo = str(entrada.title)
+            texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
             fecha = dateutil.parser.parse(entrada.published)  - datetime.timedelta(hours=3)
 
-            categoria = url.split('/')[3]
+            categoria = str(url.split('/')[3])
             
             if categoria == "america":
                 categoria = "internacional"

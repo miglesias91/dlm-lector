@@ -18,22 +18,21 @@ from medios.diarios.telam import Telam
 from medios.diarios.perfil import Perfil
 from medios.diarios.ambito import Ambito
 from medios.diarios.tn import TN
+from medios.diarios.popular import Popular
 from medios.diarios.casarosada import CasaRosada
 
-from ia import txt
-from bd.entidades import Kiosco
-import utiles
+from bd.kiosco import Kiosco
 
 def leer_medio(medio):
     medio.leer()
-    return
+
     kiosco = Kiosco()
-    kiosco.actualizar_diario(medio)
+    kiosco.actualizar_diario(medio) 
 
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
 
-    medios = [Clarin(), LaNacion(), ElDestape(), PaginaDoce(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada()]
+    medios = [Clarin(), LaNacion(), ElDestape(), PaginaDoce(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular()]
     
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:

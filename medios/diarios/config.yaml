@@ -228,11 +228,11 @@ diarios:
       - tag: "ambito-biz"
         url: "https://www.ambito.com/rss/ambito-biz.xml"
 
-  - tag: "tn"
+  - tag: "todonoticias"
     descripcion: "TN"
     twitter: "@todonoticias"
     hashtag: "#TN"
-    feed_noticias: "https://tn.com.ar/googlenews.xml"
+    feed_noticias: "https://tn.com.ar/arcio/google-news-feed/"
     categorias:
       - "deportes"
       - "policiales"

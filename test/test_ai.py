@@ -8,7 +8,7 @@ import nltk
 from nltk.corpus import cess_esp
 
 from ia.txt import freq #, word2vec, word2vec_pro
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class TestFreq(unittest.TestCase):
 

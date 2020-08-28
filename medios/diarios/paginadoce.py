@@ -13,21 +13,32 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class PaginaDoce(Diario):
 
     def __init__(self):
         Diario.__init__(self, "paginadoce")
                     
-    def leer(self, fecha, categorias):
+    def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
 
-        for url, fecha in self.entradas_feed():
-            if kiosco.contar_noticias(diario=self.etiqueta, url=url): # si existe ya la noticia (url), no la decargo
+        entradas = self.entradas_feed()[0:70]
+
+        print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
+
+        i = 0
+        for url, fecha in entradas:
+
+            i += 1
+
+            if url in urls_existentes:
+                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
+
+            print("descargando noticia " + str(i) + "/" + str(len(entradas)))
             categoria, titulo, texto = self.parsear_noticia(url=url)
             if texto == None:
                 continue
@@ -42,10 +53,12 @@ class PaginaDoce(Diario):
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
-            url = entrada.loc.string
+            url = str(entrada.loc.string)
             fecha = dateutil.parser.parse(entrada.find('news:publication_date').string)
             urls_fechas.append((url, fecha))
             
+        urls_fechas.sort(key=lambda e: e[1], reverse=True)
+
         return urls_fechas
 
     def parsear_noticia(self, url):
@@ -69,7 +82,7 @@ class PaginaDoce(Diario):
         if categoria == "cultura y espectaculos":
             categoria = "espectaculos"            
 
-        return  categoria, articulo.title, articulo.text
+        return  str(categoria), str(articulo.title), str(articulo.text)
 
     def parsear_categoria(self, html):
         feed = bs(html, 'lxml')

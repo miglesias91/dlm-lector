@@ -6,7 +6,7 @@ import newspaper as np
 from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class Diario(Medio):
 

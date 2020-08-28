@@ -13,7 +13,7 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class CasaRosada(Diario):
 
@@ -45,33 +45,48 @@ class CasaRosada(Diario):
             index += 40
             feed = fp.parse(url_feed_template + str(index))
 
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
         for entrada in entradas:
             titulo = entrada.title
             texto = bs(re.sub(tag_regexp,' ',entrada.summary), features="lxml").text
                 
             fecha = dateutil.parser.parse(entrada.published)
             url = entrada.link
-            if kiosco.bd.noticias.find(filter={'diario':self.etiqueta, 'url':url}).count() > 0: # si existe ya la noticia (url), no la decargo
+            if url in urls_existentes:
                 continue
+
             self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria='todo', titulo=titulo, texto=self.limpiar_texto(texto)))
 
 
-    def leer(self, fecha, categorias):
+    def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
+
+        print("leyendo noticias de '" + self.etiqueta + "'...")
 
         tag_regexp = re.compile(r'<[^>]+>')
 
         for tag, url_feed in self.feeds.items():
+
+            i = 0
+
             feed = fp.parse(url_feed)
-            for entrada in feed.entries:
-                titulo = entrada.title
-                texto = bs(re.sub(tag_regexp,' ',entrada.summary), features="lxml").text
+            entradas = feed.entries[0:5]
+
+            print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + tag + "'...")
+            for entrada in entradas:
+                i += 1
+
+                titulo = str(entrada.title)
+                texto = str(bs(re.sub(tag_regexp,' ',entrada.summary), features="lxml").text)
 
                 fecha = dateutil.parser.parse(entrada.published)
-                url = entrada.link
-                if kiosco.bd.noticias.find(filter={'diario':self.etiqueta, 'url':url}).count() > 0: # si existe ya la noticia (url), no la decargo
+                url = str(entrada.link)
+
+                # si ya se existe la noticia, no la descargo
+                if url in urls_existentes:
+                    print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
                 self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=tag, titulo=titulo, texto=self.limpiar_texto(texto)))
 

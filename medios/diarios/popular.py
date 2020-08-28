@@ -12,53 +12,37 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class Popular(Diario):
 
     def __init__(self):
         Diario.__init__(self, "popular")
 
-    def leer(self, fecha, categorias):
+    def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
 
+        entradas = self.getTuplas()[0:70]
 
-        for url, fecha, categoria in self.getTuplas():
+        print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
+
+        i = 0
+        for url, fecha, categoria in entradas:
+            i += 1
+
+            if url in urls_existentes:
+                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                continue
+
+            print("descargando noticia " + str(i) + "/" + str(len(entradas)))
             titulo, texto = self.parsearNoticia(url)
 
             if categoria == "futbol":
                 categoria = "deportes"
 
             self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
-
-        # tuplas = self.getTuplas()
-
-        # tag_regexp = re.compile(r'<[^>]+>')
-        # for entrada in fp.parse(self.feed_noticias).entries:
-        #     url = entrada.link
-        #     if kiosco.contar_noticias(diario=self.etiqueta, url=url): # si existe ya la noticia (url), no la decargo
-        #         continue        
-        #     titulo = entrada.title
-        #     texto = re.sub(tag_regexp,' ',entrada.content[0].value)
-        #     fecha = dateutil.parser.parse(entrada.published)  - datetime.timedelta(hours=3)
-
-        #     categoria = url.split('/')[3]
-            
-        #     if categoria == "america":
-        #         categoria = "internacional"
-
-        #     if categoria == "teleshow":
-        #         categoria = "espectaculos"
-
-        #     if categoria == "deportes-2":
-        #         categoria = "deportes"
-
-        #     if categoria not in self.categorias:
-        #         continue
-
-        #     self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def parsearNoticia(self, url):
         articulo = np.Article(url=url, language='es')
@@ -80,10 +64,10 @@ class Popular(Diario):
 
         tuplas = []
         while len(campos) > 1:
-            url = campos.pop(0)
+            url = str(campos.pop(0))
             try:
                 fecha = dateutil.parser.parse(campos.pop(0))
-                categoria = url.split('/')[3]                
+                categoria = str(url.split('/')[3])
             except:
                 continue
             tuplas.append((url, fecha, categoria))

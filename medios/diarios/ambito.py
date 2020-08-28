@@ -12,37 +12,45 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.entidades import Kiosco
+from bd.kiosco import Kiosco
 
 class Ambito(Diario):
 
     def __init__(self):
         Diario.__init__(self, "ambito")
                     
-    def leer(self, fechas = {}, categorias = []):
+    def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
+        urls_existentes = kiosco.urls(diario = self.etiqueta)
+
+        print("leyendo noticias de '" + self.etiqueta + "'...")
 
         for categoria, url_feed in self.feeds.items():
-            for url, fecha, titulo in self.entradas_feed(url_feed=url_feed):
-                if kiosco.contar_noticias(diario=self.etiqueta, url=url): # si existe ya la noticia (url), no la decargo
+
+            i = 0
+            entradas = self.entradas_feed(url_feed=url_feed)[0:5]
+            print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + categoria + "'...")
+            for url, fecha, titulo in entradas:
+
+                i += 1
+                # si ya se existe la noticia, no la descargo
+                if url in urls_existentes:
+                    print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
+
+                print("     descargando noticia " + str(i) + "/" + str(len(entradas)))
                 texto = self.parsear_noticia(url=url)
                 if texto == None:
                     continue
-                if fechas and (fecha < fechas['desde'] or fechas['hasta'] < fecha):
-                    continue
-                if categorias and categoria not in categorias:
-                    continue
-                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=texto))
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=str(categoria), titulo=titulo, texto=texto))
 
     def entradas_feed(self, url_feed):
         entradas = []
         for entrada in fp.parse(url_feed).entries:
-            titulo = entrada.title
+            titulo = str(entrada.title)
             fecha = dateutil.parser.parse(entrada.published)
-            url = entrada.link
+            url = str(entrada.link)
             entradas.append((url, fecha, titulo))
         return entradas
 
