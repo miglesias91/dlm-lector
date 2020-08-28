@@ -41,6 +41,9 @@ class Popular(Diario):
 
             if categoria == "futbol":
                 categoria = "deportes"
+            
+            if categoria not in self.categorias:
+                categoria = "varios"
 
             self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
 
