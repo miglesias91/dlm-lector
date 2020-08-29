@@ -22,7 +22,7 @@ class Telam(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls(diario = self.etiqueta)
+        urls_existentes = kiosco.urls_recientes(fecha= (datetime.date.today() - datetime.timedelta(hours=3)) , diario = self.etiqueta, limite = 70)
 
         print("leyendo noticias de '" + self.etiqueta + "'...")
 

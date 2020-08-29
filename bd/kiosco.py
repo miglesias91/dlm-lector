@@ -127,8 +127,10 @@ class Kiosco:
             
         return conteo
 
-    def urls (self, fecha=None, diario=None, categorias=None):
+    def urls_recientes(self, fecha=None, diario=None, categorias=None, limite = 1000):
         rta = {}
+        items = []
+        urls = []
         tabla = None
         desde, hasta = 0, 0
 
@@ -143,16 +145,6 @@ class Kiosco:
             # hay que especificar 1 diario. 
             return -1
 
-        if fecha:
-            if type(fecha) is dict:
-                desde = int(fecha['desde'].strftime('%Y%m%d'))
-                hasta = int(fecha['hasta'].strftime('%Y%m%d'))
-                rta = tabla.scan(FilterExpression = Key('fecha').between(desde, hasta), ProjectionExpression = 'urls')       
-            else:
-                dia = int(fecha.strftime('%Y%m%d'))
-                rta = tabla.scan(FilterExpression = Key('fecha').eq(dia), ProjectionExpression = 'urls')
-        else:
-            rta = tabla.scan(ProjectionExpression = 'urls')
 
         if categorias:
             if type(categorias) is list and len(categorias) > 0:
@@ -160,9 +152,95 @@ class Kiosco:
             else:
                 cats = [categorias]
 
+        if fecha:
+            if type(fecha) is dict:
+                desde = int(fecha['desde'].strftime('%Y%m%d'))
+                hasta = int(fecha['hasta'].strftime('%Y%m%d'))
+
+                rta = tabla.query(
+                    KeyConditionExpression = Key('fecha').eq(desde) & Key('fecha').eq(hasta)
+                    # ScanIndexForward=False,
+                    # ExpressionAttributesNames = {'#u':'urls', '#f':'fecha', '#h': 'hora'},
+                    # ProjectionExpression = '#f, #h, #u'
+                    )
+
+                items = rta['Items']
+
+                while 'LastEvaluatedKey' in rta and len(items) <= limite:
+                    rta = tabla.query(
+                        ExclusiveStartKey = rta['LastEvaluatedKey'],
+                        KeyConditionExpression = Key('fecha').between(desde, hasta),
+                        ScanIndexForward=False,
+                        ProjectionExpression = 'urls')
+
+                    items.extend(rta['Items'])
+                #rta = tabla.query(KeyConditionExpression = Key('fecha').between(desde, hasta), ProjectionExpression = 'urls')
+            else:
+                dia = int(fecha.strftime('%Y%m%d'))
+                # rta = tabla.scan(FilterExpression = Key('fecha').eq(dia),
+                # ScanIndexForward=False,
+                # ProjectionExpression = 'urls')
+                rta = tabla.query(
+                    KeyConditionExpression = Key('fecha').eq(dia),
+                    ScanIndexForward=False,
+                    ProjectionExpression = 'fecha, hora, urls')
+                
+                if rta['Count'] == 0:
+                    dia -= 1 # si no trajo nada, voy a buscar a ayer.
+                    rta = tabla.query(
+                        KeyConditionExpression = Key('fecha').eq(dia),
+                        ScanIndexForward=False,
+                        ProjectionExpression = 'fecha, hora, urls')
+
+                if rta['Count'] == 0:
+                    return -1 # si no trajo nada entonces error, hay algo mal.
+
+                while len(urls) <= limite:
+                    for i in rta['Items']:
+                        for u in i['urls']:
+                            if categorias and u['cat'] not in cats:
+                                continue
+                            urls.append(u['url'])
+                        if len(urls) > limite:
+                            break
+
+                # for i in rta['Items']:
+                #     urls.extend(i['urls'])
+                #     if len(urls) > limite:
+                #         break
+
+                while 'LastEvaluatedKey' in rta and len(urls) <= limite:
+                    rta = tabla.query(
+                        ExclusiveStartKey = rta['LastEvaluatedKey'],
+                        KeyConditionExpression = Key('fecha').eq(dia),
+                        ScanIndexForward=False,
+                        ProjectionExpression = 'urls')
+
+                    while len(urls) <= limite:
+                        for u in i['urls']:
+                            if u['cat'] in categorias:
+                                urls.append(u['url'])
+                        if len(urls) > limite:
+                            break
+                
+                return urls
+        else:
+            rta = tabla.scan(
+                #KeyExpression = 'fecha',
+                ProjectionExpression = 'fecha, hora, urls')
+
+            items = rta['Items']
+
+            while 'LastEvaluatedKey' in rta and len(items) <= limite:
+                rta = tabla.query(
+                    ExclusiveStartKey = rta['LastEvaluatedKey'],
+                    ScanIndexForward=False,
+                    ProjectionExpression = 'urls')
+                items.extend(rta['Items'])
+
         # cuento los items que cumplen con lo pedido
         urls = []
-        for i in rta['Items']:
+        for i in items:
             if 'urls' not in i:
                 # item mal formado
                 continue
