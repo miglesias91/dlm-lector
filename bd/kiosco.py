@@ -21,8 +21,8 @@ class Kiosco:
         # recupero tabla del diario
         tabla = self.db.Table(diario.etiqueta)
 
-        # recupero las urls del dia de hoy y de ayer para no subir dos veces la misma noticia
-        hoy = int((datetime.date.today() - datetime.timedelta(hours=3)).strftime('%Y%m%d'))
+        # clave de hoy ajustada a la hora del servidor (+3 horas)
+        hoy = int((datetime.datetime.today() - datetime.timedelta(hours=3)).strftime('%Y%m%d'))
 
         # filtro las noticias que ya estan: si la url esta en la anterior o si su fecha es de ayer, entonces no guardo
         noticias = [{'fecha': n.fecha.strftime('%Y%m%d%H%M%S'), 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias]
