@@ -186,7 +186,7 @@ class Kiosco:
                     ProjectionExpression = 'fecha, hora, urls')
                 
                 if rta['Count'] == 0:
-                    dia -= 1 # si no trajo nada, voy a buscar a ayer.
+                    dia = int((fecha - datetime.timedelta(days=1)).strftime('%Y%m%d')) # si no trajo nada, voy a buscar a ayer.
                     rta = tabla.query(
                         KeyConditionExpression = Key('fecha').eq(dia),
                         ScanIndexForward=False,
