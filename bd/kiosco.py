@@ -193,7 +193,7 @@ class Kiosco:
                         ProjectionExpression = 'fecha, hora, urls')
 
                 if rta['Count'] == 0:
-                    return -1 # si no trajo nada entonces error, hay algo mal.
+                    return [] # si no trajo nada entonces doy por hecho que no hay urls recientes (son todas viejas).
 
                 while len(urls) <= limite:
                     for i in rta['Items']:
