@@ -2,6 +2,8 @@ import dateutil
 import yaml
 import feedparser as fp
 import newspaper as np
+import nltk
+
 
 from medios.medio import Medio
 from medios.diarios.noticia import Noticia
