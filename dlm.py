@@ -45,6 +45,10 @@ def leer_medios(parametros):
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            leer_medio(medio)
 
+    for medio in medios:
+        if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
+           actualizar_resultados(medio)
+
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
     print("ACCIONES")
