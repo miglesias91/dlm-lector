@@ -12,7 +12,8 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.kiosco import Kiosco
+#from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 class Infobae(Diario):
 
@@ -26,7 +27,7 @@ class Infobae(Diario):
 
         # recupero las urls del dia de hoy, con la diferencia horario del servidor.
         # si no hay de hoy, me trae de ayer.
-        urls_existentes = kiosco.urls_recientes(fecha= (datetime.date.today() - datetime.timedelta(hours=3)) , diario = self.etiqueta, limite = 70)
+        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -44,7 +45,7 @@ class Infobae(Diario):
             print("parseando noticia " + str(i) + "/" + str(len(entradas)))
             titulo = str(entrada.title)
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published)  - datetime.timedelta(hours=3)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
             categoria = str(url.split('/')[3])
             

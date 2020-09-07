@@ -13,7 +13,8 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.kiosco import Kiosco
+#from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 class PaginaDoce(Diario):
 
@@ -23,7 +24,7 @@ class PaginaDoce(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(fecha= (datetime.date.today() - datetime.timedelta(hours=3)) , diario = self.etiqueta, limite = 70)
+        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
 
         entradas = self.entradas_feed()[0:70]
 
@@ -54,7 +55,7 @@ class PaginaDoce(Diario):
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
             url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string)
+            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
             urls_fechas.append((url, fecha))
             
         urls_fechas.sort(key=lambda e: e[1], reverse=True)

@@ -12,7 +12,8 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.kiosco import Kiosco
+#from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 class Telam(Diario):
 
@@ -22,7 +23,7 @@ class Telam(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(fecha= (datetime.date.today() - datetime.timedelta(hours=3)) , diario = self.etiqueta, limite = 70)
+        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
 
         print("leyendo noticias de '" + self.etiqueta + "'...")
 
@@ -51,7 +52,7 @@ class Telam(Diario):
         entradas = []
         for entrada in fp.parse(url_feed).entries:
             titulo = str(entrada.title)
-            fecha = dateutil.parser.parse(entrada.published)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)
             url = str(entrada.link)
             entradas.append((url, fecha, titulo))
         return entradas

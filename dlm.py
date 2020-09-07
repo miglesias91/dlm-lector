@@ -21,7 +21,8 @@ from medios.diarios.tn import TN
 from medios.diarios.popular import Popular
 from medios.diarios.casarosada import CasaRosada
 
-from bd.kiosco import Kiosco
+# from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 from procesamiento.procesador import Procesador
 
