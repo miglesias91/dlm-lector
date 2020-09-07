@@ -53,7 +53,7 @@ class ElDestape(Diario):
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
             url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string) - datetime.timedelta(hours=3)
+            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True) - datetime.timedelta(hours=3)
             titulo = str(entrada.find('news:title').string)
 
             signos = string.punctuation + "¡¿\n"

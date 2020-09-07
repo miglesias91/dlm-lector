@@ -21,6 +21,8 @@ class TestKiosco(unittest.TestCase):
     def test_contar_noticias(self):
         k = Kiosco()
 
+        notis = k.noticias(diario='clarin')
+
         #fecha = datetime.datetime(year = 2020, month = 8, day = 25)
         fecha = {'desde' : datetime.datetime(year = 2020, month = 8, day = 22), 'hasta' : datetime.datetime(year = 2020, month = 8, day = 24)}
         categoria = ['economia', 'internacional']

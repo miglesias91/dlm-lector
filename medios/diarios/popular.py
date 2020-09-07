@@ -70,7 +70,7 @@ class Popular(Diario):
         while len(campos) > 1:
             url = str(campos.pop(0))
             try:
-                fecha = dateutil.parser.parse(campos.pop(0))
+                fecha = dateutil.parser.parse(campos.pop(0), ignoretz=True)
                 categoria = str(url.split('/')[3])
             except:
                 continue

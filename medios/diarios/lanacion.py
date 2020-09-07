@@ -50,7 +50,7 @@ class LaNacion(Diario):
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
             url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string)
+            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
             titulo = str(entrada.find('news:title').string)
             categoria = str(url.split('/')[3])
 

@@ -55,7 +55,7 @@ class PaginaDoce(Diario):
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
             url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string)
+            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
             urls_fechas.append((url, fecha))
             
         urls_fechas.sort(key=lambda e: e[1], reverse=True)

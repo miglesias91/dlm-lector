@@ -45,7 +45,7 @@ class Infobae(Diario):
             print("parseando noticia " + str(i) + "/" + str(len(entradas)))
             titulo = str(entrada.title)
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published)  - datetime.timedelta(hours=3)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
             categoria = str(url.split('/')[3])
             

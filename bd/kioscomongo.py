@@ -8,6 +8,8 @@ import yaml
 import pymongo
 from pymongo import MongoClient
 
+from medios.diarios.noticia import Noticia
+
 class Kiosco:
     def __init__(self, fecha=None):
         with open('conexiones.json') as c:
@@ -22,8 +24,8 @@ class Kiosco:
         self.bd = MongoClient(conexion).dlm
 
     def actualizar_diario(self, diario):
-        urls = self.bd.noticias.find(filter={'diario':diario.etiqueta}, projection=['url'])
-        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias if n.url not in urls]
+        # ver si hay q restarle 3 o 6 horas. probar en el servidor
+        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias]
 
         if len(json_noticias) == 0:
         #     print("no hay noticias nuevas de '" + diario.etiqueta + "'")
@@ -54,7 +56,9 @@ class Kiosco:
 
         projection = {'fecha':fecha_in, 'url':url_in, 'diario':diario_in, 'cat':cat_in, 'titulo':tit_in, 'texto':text_in }
 
-        return self.bd.noticias.find(query, projection)
+        cursor = self.bd.noticias.find(query, projection)
+
+        return [Noticia(fecha=n['fecha'], url=n['url'], diario=n['diario'], categoria=n['cat'], titulo=n['titulo'], texto=n['texto']) for n in cursor]
 
     def contar_noticias(self, fecha=None, diario=None, categorias=None, url=None):
         query = {}

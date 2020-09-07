@@ -46,7 +46,7 @@ class TN(Diario):
             print("parseando noticia " + str(i) + "/" + str(len(entradas)))
             titulo = str(entrada.title)
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published)  - datetime.timedelta(hours=3)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
             categoria = str(url.split('/')[3])
 
@@ -68,62 +68,3 @@ class TN(Diario):
         regexp = re.compile(r'Seguí leyendo[^$]+')
         texto = re.sub(regexp,' ',texto)
         return texto
-
-
-    # def leer(self):
-    #     kiosco = Kiosco()
-
-    #     urls_existentes = kiosco.urls(diario = self.etiqueta)
-
-    #     entradas = self.entradas_feed()[0:100]
-
-    #     print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
-
-    #     i = 0
-    #     for url, fecha, titulo, categoria in entradas:
-
-    #         i += 1
-
-    #         if url in urls_existentes:
-    #             print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
-    #             continue
-
-    #         print("descargando noticia " + str(i) + "/" + str(len(entradas)))
-    #         texto = self.parsear_noticia(url=url)
-    #         if texto == None:
-    #             continue
-    #         self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=texto))
-
-    # def entradas_feed(self):
-    #     urls_fechas_titulo_categoria = []
-    #     req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
-    #     feed = bs(urlopen(req).read(), 'html.parser')
-    #     for entrada in feed.find_all('url'):
-    #         url = str(entrada.loc.string)
-    #         fecha = dateutil.parser.parse(entrada.find('news:publication_date').string) - datetime.timedelta(hours=3)
-    #         titulo = str(entrada.find('news:title').string)
-
-    #         categoria = str(url.split('/')[3])
-    #         if categoria == "show":
-    #             categoria = "espectaculos"
-
-    #         if categoria not in self.categorias:
-    #             continue
-
-    #         urls_fechas_titulo_categoria.append((url, fecha, titulo, categoria))
-            
-    #     return urls_fechas_titulo_categoria
-
-    # def parsear_noticia(self, url):
-    #     articulo = np.Article(url=url, language='es')
-    #     try:
-    #         articulo.download()
-    #         articulo.parse()
-    #     except:
-    #         return None
-
-    #     return self.limpiar_texto(articulo.text)
-
-    # def limpiar_texto(self, texto):
-    #     texto = texto.replace('\n\n', ' ')
-    #     return texto

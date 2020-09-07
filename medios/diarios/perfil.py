@@ -51,7 +51,7 @@ class Perfil(Diario):
         entradas = []
         for entrada in fp.parse(url_feed).entries:
             titulo = str(entrada.title)
-            fecha = dateutil.parser.parse(entrada.published)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)
             url = str(entrada.link)
             entradas.append((url, fecha, titulo))
         return entradas
