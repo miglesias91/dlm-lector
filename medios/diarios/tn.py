@@ -12,7 +12,8 @@ from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 from medios.diarios.diario import Diario
 
-from bd.kiosco import Kiosco
+#from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 class TN(Diario):
 
@@ -26,7 +27,7 @@ class TN(Diario):
 
         tag_regexp = re.compile(r'<[^>]+>')
 
-        urls_existentes = kiosco.urls_recientes(fecha= (datetime.date.today() - datetime.timedelta(hours=3)) , diario = self.etiqueta, limite = 70)
+        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
