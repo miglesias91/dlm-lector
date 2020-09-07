@@ -23,11 +23,18 @@ from medios.diarios.casarosada import CasaRosada
 
 from bd.kiosco import Kiosco
 
+from procesamiento.procesador import Procesador
+
 def leer_medio(medio):
     medio.leer()
 
     kiosco = Kiosco()
-    kiosco.actualizar_diario(medio) 
+    kiosco.actualizar_diario(medio)
+
+def actualizar_resultados(medio):
+    procesador = Procesador()
+
+    procesador.sumar_freqs(medio)
 
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
@@ -37,6 +44,10 @@ def leer_medios(parametros):
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            leer_medio(medio)
+
+    for medio in medios:
+        if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
+           actualizar_resultados(medio)
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
