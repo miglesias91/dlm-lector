@@ -23,19 +23,24 @@ from medios.diarios.casarosada import CasaRosada
 
 # from bd.kiosco import Kiosco
 from bd.kioscomongo import Kiosco
+from bd.resultados import Resultados
+
+from procesamiento.frecuencias import Frecuencias
 
 from procesamiento.procesador import Procesador
 
 def leer_medio(medio):
     medio.leer()
 
-    kiosco = Kiosco()
-    kiosco.actualizar_diario(medio)
+    #kiosco = Kiosco()
+    #kiosco.actualizar_diario(medio)
 
 def actualizar_resultados(medio):
-    procesador = Procesador()
+    frecuencias = Frecuencias(medio.noticias)
+    frecuencias.calcular()
 
-    procesador.sumar_freqs(medio)
+    resultados = Resultados()
+    resultados.actualizar_freqs(frecuencias.resultados)
 
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])

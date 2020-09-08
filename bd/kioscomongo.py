@@ -15,9 +15,9 @@ class Kiosco:
         with open('conexiones.json') as c:
             j = json.load(c)
             
-        usuario = j['usuario']
-        pwd = j['pwd']
-        server = j['server']
+        usuario = j['kiosco']['usuario']
+        pwd = j['kiosco']['pwd']
+        server = j['kiosco']['server']
 
         conexion = "mongodb://" + usuario + ":" + pwd + "@" + server + "/"
 
