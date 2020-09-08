@@ -27,8 +27,6 @@ from bd.resultados import Resultados
 
 from procesamiento.frecuencias import Frecuencias
 
-from procesamiento.procesador import Procesador
-
 def leer_medio(medio):
     medio.leer()
 
