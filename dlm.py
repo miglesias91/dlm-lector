@@ -32,8 +32,8 @@ from procesamiento.procesador import Procesador
 def leer_medio(medio):
     medio.leer()
 
-    #kiosco = Kiosco()
-    #kiosco.actualizar_diario(medio)
+    kiosco = Kiosco()
+    kiosco.actualizar_diario(medio)
 
 def actualizar_resultados(medio):
     frecuencias = Frecuencias(medio.noticias)
