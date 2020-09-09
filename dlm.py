@@ -48,60 +48,7 @@ def leer_medios(parametros):
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            leer_medio(medio)
-
-    for medio in medios:
-        if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            actualizar_resultados(medio)
-
-def fabrica_medios(etiqueta):
-    if etiqueta == 'clarin':
-        return Clarin()
-    elif etiqueta == 'lanacion':
-        return LaNacion()
-    elif etiqueta == 'eldestape':
-        return ElDestape()
-    elif etiqueta == 'paginadoce':
-        return PaginaDoce()
-    elif etiqueta == 'infobae':
-        return Infobae()
-    elif etiqueta == 'telam':
-        return Telam()
-    elif etiqueta == 'perfil':
-        return Perfil()
-    elif etiqueta == 'ambito':
-        return Ambito()
-    elif etiqueta == 'todonoticias':
-        return TN()
-    elif etiqueta == 'casarosada':
-        return CasaRosada()
-    elif etiqueta == 'popular':
-        return Popular()
-    else return -1
-
-def leer_medios_pocamemoria(parametros):
-    medios_a_leer = set(parametros['medios'])
-
-    medios = ['clarin', 'lanacion', 'eldestape', 'paginadoce', 'infobae', 'telam', 'perfil', 'ambito', 'todonoticias', 'casarosada', 'popular']
-
-    kiosco = Kiosco()
-    resultados = Resultados()
-
-    for etiqueta in medios:
-        if etiqueta in medios_a_leer or len(medios_a_leer) == 0:
-            medio = fabrica_medios(etiqueta)
-
-            # bajo noticias
-            medio.leer()
-
-            # guardo noticias
-            kiosco.actualizar_diario(medio)
-
-            # calculo frecuencias
-            frecuencias = Frecuencias(medio.noticias)
-            frecuencias.calcular()
-
-            # guardo frecuencias
-            resultados.actualizar_freqs(frecuencias.resultados)
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
@@ -128,8 +75,8 @@ def main():
         if o == "--help" or o == "-h":
             accion=usage
         elif o == "--leer":
-            #accion=leer_medios
-            accion=leer_medios_pocamemoria
+            accion=leer_medios
+            #accion=leer_medios_pocamemoria
         elif o == "--fecha":
             fecha = None
             if len(a.split('-')) == 2:
