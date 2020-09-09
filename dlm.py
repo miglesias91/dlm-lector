@@ -103,10 +103,6 @@ def leer_medios_pocamemoria(parametros):
             # guardo frecuencias
             resultados.actualizar_freqs(frecuencias.resultados)
 
-
-
-
-
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
     print("ACCIONES")
