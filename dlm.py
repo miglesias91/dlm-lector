@@ -33,7 +33,7 @@ def leer_medio(medio):
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
 
-    medios = [Clarin(), LaNacion(), ElDestape(), PaginaDoce(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular()]
+    medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular(), PaginaDoce()]
     
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
