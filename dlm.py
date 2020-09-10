@@ -23,12 +23,22 @@ from medios.diarios.casarosada import CasaRosada
 
 # from bd.kiosco import Kiosco
 from bd.kioscomongo import Kiosco
+from bd.resultados import Resultados
+
+from procesamiento.frecuenciasgcp import Frecuencias
 
 def leer_medio(medio):
     medio.leer()
 
     kiosco = Kiosco()
     kiosco.actualizar_diario(medio)
+
+def actualizar_resultados(medio):
+    frecuencias = Frecuencias(medio.noticias)
+    frecuencias.calcular()
+
+    resultados = Resultados()
+    resultados.actualizar_freqs(frecuencias.resultados)
 
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
@@ -38,6 +48,7 @@ def leer_medios(parametros):
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            leer_medio(medio)
+           actualizar_resultados(medio)
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
@@ -65,6 +76,7 @@ def main():
             accion=usage
         elif o == "--leer":
             accion=leer_medios
+            #accion=leer_medios_pocamemoria
         elif o == "--fecha":
             fecha = None
             if len(a.split('-')) == 2:

@@ -7,3 +7,8 @@ newsplease funciona
 newspaper: clarin, pagina12, la nacion (menos autor), eldestape (menos authors) (especificando language='es')
 feedparser: infobae
 
+arquitectura:
+estamos usando servidores de la capa gratuita de amazon:
+- servidor 'dlm-lector': cada 15' se leen las noticias de cada medio y se actualizan los resultados.
+- servidor 'visu': mongodb que guarda las noticias y reusltados (frecuencias por el momento)
+

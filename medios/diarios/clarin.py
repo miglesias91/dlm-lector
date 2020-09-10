@@ -51,7 +51,6 @@ class Clarin(Diario):
         for entrada in feed.find_all('url'):
              # creo objetos str xq sino mas adelante tira RecursionError.            
             url = str(entrada.loc.string)
-            #fecha = datetime.datetime.strptime(entrada.find('news:publication_date').string, '%Y-%m-%dT%H:%M:%S%z')
             fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
             titulo = str(entrada.find('news:title').string)
             categoria = str(url.split('/')[3])
