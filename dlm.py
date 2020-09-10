@@ -25,7 +25,7 @@ from medios.diarios.casarosada import CasaRosada
 from bd.kioscomongo import Kiosco
 from bd.resultados import Resultados
 
-from procesamiento.frecuencias import Frecuencias
+from procesamiento.frecuenciasgcp import Frecuencias
 
 def leer_medio(medio):
     medio.leer()
