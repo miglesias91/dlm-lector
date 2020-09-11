@@ -106,7 +106,7 @@ class Kiosco:
 
         return self.bd.noticias.distinct("cat", query)
     
-    def urls_recientes(self, fecha=None, diario=None, categoria=categoria, limite = 100):
+    def urls_recientes(self, fecha=None, diario=None, categoria=None, limite = 100):
         query = {}
 
         if fecha:

@@ -27,7 +27,6 @@ class Infobae(Diario):
 
         # recupero las urls del dia de hoy, con la diferencia horario del servidor.
         # si no hay de hoy, me trae de ayer.
-        #urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -49,7 +48,7 @@ class Infobae(Diario):
                 categoria = "deportes"
 
             #if url in urls_existentes:
-            if kiosco.contar_noticias(diario=self.etiqueta, categoria=categoria, url=url):
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 

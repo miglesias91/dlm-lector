@@ -23,11 +23,7 @@ class TN(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
-
         tag_regexp = re.compile(r'<[^>]+>')
-
-        # urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
@@ -48,7 +44,7 @@ class TN(Diario):
                 continue
 
             # if url in urls_existentes:
-            if kiosco.contar_noticias(diario=self.etiqueta, categoria=categoria, url=url):
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 
