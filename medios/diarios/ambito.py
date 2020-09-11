@@ -36,7 +36,7 @@ class Ambito(Diario):
 
                 i += 1
                 # si ya se existe la noticia, no la descargo
-                if url in urls_existentes:
+                if kiosco.contar_noticias(diario=self.etiqueta, categoria=categoria, url=url):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 

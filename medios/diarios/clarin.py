@@ -23,7 +23,7 @@ class Clarin(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
+        #urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
 
         entradas = self.entradas_feed()[0:70]
 
@@ -34,7 +34,8 @@ class Clarin(Diario):
             
             i += 1
 
-            if url in urls_existentes:
+            #if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, categoria=categoria, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 
