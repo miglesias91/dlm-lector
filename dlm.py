@@ -6,8 +6,6 @@ from collections import defaultdict
 import yaml
 import pathlib
 
-#import numpy as np
-
 # from medios.diarios.diarios import Clarin, ElDestape, Infobae, LaNacion, PaginaDoce, CasaRosada
 from medios.diarios.clarin import Clarin
 from medios.diarios.lanacion import LaNacion
@@ -28,17 +26,38 @@ from bd.resultados import Resultados
 from procesamiento.frecuenciasgcp import Frecuencias
 
 def leer_medio(medio):
-    medio.leer()
 
-    kiosco = Kiosco()
-    kiosco.actualizar_diario(medio)
+    try:
+        medio.leer()
+    except:
+        print('error leyendo ' + medio.etiqueta)
+        return False
+
+    try:
+        kiosco = Kiosco()
+        kiosco.actualizar_diario(medio)
+    except:
+        print('error actualizando noticias de ' + medio.etiqueta)
+        return False
+
+    return True
 
 def actualizar_resultados(medio):
     frecuencias = Frecuencias(medio.noticias)
-    frecuencias.calcular()
+    try:
+        frecuencias.calcular()
+    except:
+        print('error calculando frecuencias de ' + medio.etiqueta)
+        return False
 
     resultados = Resultados()
-    resultados.actualizar_freqs(frecuencias.resultados)
+    try:
+        resultados.actualizar_freqs(frecuencias.resultados)
+    except:
+        print('error actualizando frecuencias de ' + medio.etiqueta)
+        return False
+
+    return True
 
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
@@ -47,8 +66,8 @@ def leer_medios(parametros):
     
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
-           leer_medio(medio)
-           actualizar_resultados(medio)
+           if leer_medio(medio):
+                actualizar_resultados(medio)
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")

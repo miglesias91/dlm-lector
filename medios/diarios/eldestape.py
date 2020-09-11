@@ -26,8 +26,6 @@ class ElDestape(Diario):
 
         print("leyendo '" + self.etiqueta + "'...")
 
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
-
         entradas = self.entradas_feed()[0:70]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -36,7 +34,8 @@ class ElDestape(Diario):
         for url, fecha, titulo, categoria in entradas:
             i += 1
 
-            if url in urls_existentes:
+            #if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 

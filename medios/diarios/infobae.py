@@ -27,7 +27,6 @@ class Infobae(Diario):
 
         # recupero las urls del dia de hoy, con la diferencia horario del servidor.
         # si no hay de hoy, me trae de ayer.
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -38,17 +37,7 @@ class Infobae(Diario):
 
             url = str(entrada.link)
             
-            if url in urls_existentes:
-                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
-                continue
-
-            print("parseando noticia " + str(i) + "/" + str(len(entradas)))
-            titulo = str(entrada.title)
-            texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
-
             categoria = str(url.split('/')[3])
-            
             if categoria == "america":
                 categoria = "internacional"
 
@@ -57,6 +46,16 @@ class Infobae(Diario):
 
             if categoria == "deportes-2":
                 categoria = "deportes"
+
+            #if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                continue
+
+            print("parseando noticia " + str(i) + "/" + str(len(entradas)))
+            titulo = str(entrada.title)
+            texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
             if categoria not in self.categorias:
                 continue

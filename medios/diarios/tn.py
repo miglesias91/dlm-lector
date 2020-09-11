@@ -23,11 +23,7 @@ class TN(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        print("leyendo '" + self.etiqueta + "'...")
-
         tag_regexp = re.compile(r'<[^>]+>')
-
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
         
         entradas = fp.parse(self.feed_noticias).entries[0:70]
 
@@ -39,15 +35,6 @@ class TN(Diario):
 
             url = str(entrada.link)
             
-            if url in urls_existentes:
-                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
-                continue
-
-            print("parseando noticia " + str(i) + "/" + str(len(entradas)))
-            titulo = str(entrada.title)
-            texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
-
             categoria = str(url.split('/')[3])
 
             if categoria == "show":
@@ -55,6 +42,16 @@ class TN(Diario):
 
             if categoria not in self.categorias:
                 continue
+
+            # if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+                print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                continue
+
+            print("parseando noticia " + str(i) + "/" + str(len(entradas)))
+            titulo = str(entrada.title)
+            texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
             self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
 

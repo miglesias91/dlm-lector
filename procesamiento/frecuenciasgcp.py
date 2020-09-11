@@ -44,19 +44,33 @@ class Frecuencias:
                     resultado = {'fecha': fecha, 'diario': diario, 'categoria': categoria, 'total': len(noticias), 'ter_tit':f_ter_tit, 'ver_tit': f_ver_tit, 'per_tit': f_per_tit, 'ter_txt': f_ter_txt, 'ver_txt': f_ver_txt, 'per_txt': f_per_txt }
                     self.resultados.append(resultado)
 
-    def tokens(self, texto):
-        texto =  texto.replace('.', '. ')
+    def tokens(self, titulo, texto):
+        todo = titulo.replace('.',' ') + '. ' + texto.replace('.', '. ')
 
-        doc = types.Document(content=texto, type= enums.Document.Type.PLAIN_TEXT, language='es')
+        doc = types.Document(content=todo, type= enums.Document.Type.PLAIN_TEXT, language='es')
 
-        return self.cliente.analyze_syntax(doc, encoding_type = enums.EncodingType.UTF8)
+        rta = self.cliente.analyze_syntax(doc, encoding_type = enums.EncodingType.UTF8)
+
+        tokens_titulo = []
+        while rta.tokens[0].text.content != '.':
+            t = rta.tokens.pop(0)
+            tokens_titulo.append(t)
+
+        return tokens_titulo, [t for t in rta.tokens]
+
+    # def tokens(self, texto):
+    #     texto =  texto.replace('.', '. ')
+
+    #     doc = types.Document(content=texto, type= enums.Document.Type.PLAIN_TEXT, language='es')
+
+    #     return self.cliente.analyze_syntax(doc, encoding_type = enums.EncodingType.UTF8)
     
-    def entidades(self, texto):
-        texto =  texto.replace('.', '. ')
+    # def entidades(self, texto):
+    #     texto =  texto.replace('.', '. ')
 
-        doc = types.Document(content=texto, type= enums.Document.Type.PLAIN_TEXT, language='es')
+    #     doc = types.Document(content=texto, type= enums.Document.Type.PLAIN_TEXT, language='es')
 
-        return self.cliente.analyze_entities(doc, encoding_type = enums.EncodingType.UTF8)
+    #     return self.cliente.analyze_entities(doc, encoding_type = enums.EncodingType.UTF8)
 
     def __noticias2freqs__(self, noticias):
 
@@ -70,19 +84,17 @@ class Frecuencias:
 
         for noticia in noticias:
 
-            tokens_titulo = self.tokens(noticia.titulo)
-            entidades_titulo = self.entidades(noticia.titulo)
-
-            tokens_texto = self.tokens(noticia.texto)
-            entidades_texto = self.entidades(noticia.texto)
+            tokens_titulo, tokens_texto = self.tokens(noticia.titulo, noticia.texto)
 
             nuevas_freq_terminos_titulo = self.freq_terminos(tokens_titulo, 30)
             nuevas_freq_verbos_titulo = self.freq_verbos(tokens_titulo, 15)
-            nuevas_freq_personas_titulo = self.freq_personas(entidades_titulo, 15)
+            nuevas_freq_personas_titulo = self.freq_personas(tokens_titulo, 15)
+            # nuevas_freq_personas_titulo = self.freq_personas(entidades_titulo, 15)
 
             nuevas_freq_terminos_texto = self.freq_terminos(tokens_texto, 50)
             nuevas_freq_verbos_texto = self.freq_verbos(tokens_texto, 15)
-            nuevas_freq_personas_texto = self.freq_personas(entidades_texto, 15)
+            nuevas_freq_personas_texto = self.freq_personas(tokens_texto, 15)
+            # nuevas_freq_personas_texto = self.freq_personas(entidades_texto, 15)
 
             freq_terminos_titulo = Frecuencias.sumar_freqs(freq_terminos_titulo, nuevas_freq_terminos_titulo, 30)
             freq_verbos_titulo = Frecuencias.sumar_freqs(freq_verbos_titulo, nuevas_freq_verbos_titulo, 15)
@@ -94,9 +106,9 @@ class Frecuencias:
 
         return freq_terminos_titulo, freq_verbos_titulo, freq_personas_titulo, freq_terminos_texto, freq_verbos_texto, freq_personas_texto
 
-    def freq_terminos(self, doc, top):
+    def freq_terminos(self, tokens, top):
         freqs = {}
-        for t in doc.tokens:
+        for t in tokens:
             if t.part_of_speech.tag == types.PartOfSpeech.Tag.NOUN and t.part_of_speech.proper == types.PartOfSpeech.Proper.NOT_PROPER and len(t.text.content) > 2 and t.lemma.lower() not in self.sustantivos_comunes and t.text.content.lower() not in self.stopwords:
                 k = t.lemma.lower().translate(str.maketrans('','', self.puntuacion))
                 if k in freqs:
@@ -106,9 +118,9 @@ class Frecuencias:
 
         return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
-    def freq_verbos(self, doc, top):
+    def freq_verbos(self, tokens, top):
         freqs = {}
-        for t in doc.tokens:
+        for t in tokens:
             if t.part_of_speech.tag == types.PartOfSpeech.Tag.VERB:
                 k = t.lemma.lower().translate(str.maketrans('','', self.puntuacion))
                 if k in freqs:
@@ -118,17 +130,44 @@ class Frecuencias:
 
         return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
-    def freq_personas(self, doc, top):
+    def freq_personas(self, tokens, top):
         freqs = {}
-        for e in doc.entities:
-            if e.type == types.Entity.PERSON:
-                k = e.name.translate(str.maketrans('','', self.puntuacion))
+
+        k = []
+        for t in tokens:
+            if t.part_of_speech.tag == types.PartOfSpeech.Tag.NOUN and t.part_of_speech.proper == types.PartOfSpeech.Proper.PROPER:
+                k.append(t.text.content.translate(str.maketrans('','', self.puntuacion)))
+                continue
+
+            if len(k):
+                k = ' '.join(k)
                 if k in freqs:
-                    freqs[k] += len(e.mentions)
+                    freqs[k] += 1
                 else:
-                    freqs[k] = len(e.mentions)
+                    freqs[k] = 1
+                k = []
+
+        # chequeo si justo no habia una persona en la última palabra.
+        if len(k):
+            k = ' '.join(k)
+            if k in freqs:
+                freqs[k] += 1
+            else:
+                freqs[k] = 1            
 
         return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
+
+    # def freq_personas(self, doc, top):
+    #     freqs = {}
+    #     for e in doc.entities:
+    #         if e.type == types.Entity.PERSON:
+    #             k = e.name.translate(str.maketrans('','', self.puntuacion))
+    #             if k in freqs:
+    #                 freqs[k] += len(e.mentions)
+    #             else:
+    #                 freqs[k] = len(e.mentions)
+
+    #     return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
     @staticmethod
     def sumar_freqs(freqs, freqs_nuevas, top):

@@ -24,8 +24,6 @@ class PaginaDoce(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 40)
-
         entradas = self.entradas_feed()[0:40]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -35,7 +33,8 @@ class PaginaDoce(Diario):
 
             i += 1
 
-            if url in urls_existentes:
+            # if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 

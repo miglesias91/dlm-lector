@@ -62,8 +62,6 @@ class CasaRosada(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
-
         print("leyendo noticias de '" + self.etiqueta + "'...")
 
         tag_regexp = re.compile(r'<[^>]+>')
@@ -86,9 +84,10 @@ class CasaRosada(Diario):
                 url = str(entrada.link)
 
                 # si ya se existe la noticia, no la descargo
-                if url in urls_existentes:
+                if kiosco.contar_noticias(diario=self.etiqueta, categorias=tag, url=url):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
+
                 self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=tag, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def limpiar_texto(self, texto):

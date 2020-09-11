@@ -23,8 +23,6 @@ class Popular(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        urls_existentes = kiosco.urls_recientes(diario = self.etiqueta, limite = 70)
-
         entradas = self.getTuplas()[0:70]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
@@ -33,7 +31,8 @@ class Popular(Diario):
         for url, fecha, categoria in entradas:
             i += 1
 
-            if url in urls_existentes:
+            # if url in urls_existentes:
+            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 

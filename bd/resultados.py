@@ -3,7 +3,7 @@ import json
 
 from pymongo import MongoClient
 
-from procesamiento.frecuencias import Frecuencias
+from procesamiento.frecuenciasgcp import Frecuencias
 
 class Resultados:
     def __init__(self):
@@ -20,7 +20,6 @@ class Resultados:
 
         
     def actualizar_freqs(self, resultados):
-
         for r in resultados:
 
             query = {'fecha': r['fecha'], 'diario': r['diario'], 'categoria':r['categoria']}
