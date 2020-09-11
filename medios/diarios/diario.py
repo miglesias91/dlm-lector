@@ -8,7 +8,7 @@ import nltk
 from medios.medio import Medio
 from medios.diarios.noticia import Noticia
 
-from bd.kiosco import Kiosco
+from bd.kioscomongo import Kiosco
 
 class Diario(Medio):
 

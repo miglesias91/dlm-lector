@@ -6,8 +6,6 @@ from collections import defaultdict
 import yaml
 import pathlib
 
-#import numpy as np
-
 # from medios.diarios.diarios import Clarin, ElDestape, Infobae, LaNacion, PaginaDoce, CasaRosada
 from medios.diarios.clarin import Clarin
 from medios.diarios.lanacion import LaNacion
