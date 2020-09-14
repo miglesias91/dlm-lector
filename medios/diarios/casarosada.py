@@ -81,6 +81,7 @@ class CasaRosada(Diario):
                 texto = str(bs(re.sub(tag_regexp,' ',entrada.summary), features="lxml").text)
 
                 fecha = dateutil.parser.parse(entrada.published)
+                categoria = fecha.strftime('%H%M%S')
                 url = str(entrada.link)
 
                 # si ya se existe la noticia, no la descargo
@@ -88,7 +89,7 @@ class CasaRosada(Diario):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 
-                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=tag, titulo=titulo, texto=self.limpiar_texto(texto)))
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def limpiar_texto(self, texto):
         primer_linea_regexp = re.compile(r'^[^\n]+\n')
