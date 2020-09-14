@@ -85,7 +85,7 @@ class CasaRosada(Diario):
                 url = str(entrada.link)
 
                 # si ya se existe la noticia, no la descargo
-                if kiosco.contar_noticias(diario=self.etiqueta, categorias=tag, url=url):
+                if kiosco.contar_noticias(diario=self.etiqueta, url=url):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 
