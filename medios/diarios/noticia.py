@@ -1,3 +1,5 @@
+import re
+
 from medios.contenido import Contenido
 
 class Noticia(Contenido):
@@ -10,3 +12,4 @@ class Noticia(Contenido):
         self.categoria = categoria
         self.titulo = titulo
         self.texto = texto
+        self.texto = " ".join(re.split("\s+", texto, flags=re.UNICODE))

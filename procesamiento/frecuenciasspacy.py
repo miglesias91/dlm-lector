@@ -3,7 +3,7 @@ import string
 import spacy
 
 class Frecuencias:
-    def __init__(self, noticias):
+    def __init__(self, noticias=[]):
         self.init_nlp()
 
         self.noticias = {}
@@ -44,6 +44,21 @@ class Frecuencias:
 
                     resultado = {'fecha': fecha, 'diario': diario, 'categoria': categoria, 'total': len(noticias), 'ter_tit':f_ter_tit, 'ver_tit': f_ver_tit, 'per_tit': f_per_tit, 'ter_txt': f_ter_txt, 'ver_txt': f_ver_txt, 'per_txt': f_per_txt }
                     self.resultados.append(resultado)
+
+    def tituloytexto2freqs(self, titulo, texto):
+
+        doc_titulo = self.nlp(titulo)
+        doc_texto = self.nlp(texto)
+
+        f_ter_tit = self.freq_terminos(doc_titulo, 30)
+        f_ver_tit = self.freq_verbos(doc_titulo, 15)
+        f_per_tit = self.freq_personas(doc_titulo, 15)
+
+        f_ter_txt = self.freq_terminos(doc_texto, 50)
+        f_ver_txt = self.freq_verbos(doc_texto, 15)
+        f_per_txt = self.freq_personas(doc_texto, 15)
+
+        return f_ter_tit, f_ver_tit, f_per_tit, f_ter_txt, f_ver_txt, f_per_txt
 
     def __noticias2freqs__(self, noticias):
 
@@ -106,7 +121,7 @@ class Frecuencias:
         freqs = {}
         for e in doc.ents:
             if e.label_ == 'PER':
-                k = e.text.lower().translate(str.maketrans('','', self.puntuacion))
+                k = e.text.translate(str.maketrans('','', self.puntuacion))
                 if k in freqs:
                     freqs[k] += 1
                 else:

@@ -265,6 +265,15 @@ diarios:
       - "salud"
       - "horoscopo"
 
+  - tag: "diariodeleuco"
+    descripcion: "El diario de Leuco"
+    twitter: "@eldiariodeleuco"
+    hashtag: "#DiarioDeLeuco"
+    feed_noticias: "https://ledoymipalabra.com/feed"
+    categorias:
+      - "editorial"
+      - "todo"
+
   - tag: "casarosada"
     descripcion: "Casa Rosada (2015-2019)"
     twitter: "@CasaRosada"

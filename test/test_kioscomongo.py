@@ -37,3 +37,8 @@ class TestKiosco(unittest.TestCase):
         #categoria = ['economia', 'internacional']
         urls = k.urls(diario = 'clarin')
         urls
+
+    def test_subir_historicos(self):
+        k = Kiosco()
+
+        k.subir_historicos('/home/manu/Documentos/discursos_historico.json')
