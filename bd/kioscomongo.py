@@ -132,6 +132,7 @@ class Kiosco:
         #h = self.bd.noticias.find(query, projection).sort('fecha', pymongo.DESCENDING).limit(limite)
         return [u['url'] for u in self.bd.noticias.find(query, projection).sort('fecha', pymongo.DESCENDING).limit(limite)]
 
+    # metodo usado una sola vez para subir discursos historicos
     def subir_historicos(self, path_discursos_historicos):
         buffer_kiosco = []
         buffer_resultado = []

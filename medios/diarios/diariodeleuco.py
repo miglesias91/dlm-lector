@@ -56,6 +56,39 @@ class DiarioDeLeuco(Diario):
 
         print(self.etiqueta + " leyo " + str(len(self.noticias)))
 
+    def leer_editoriales(self):
+        kiosco = Kiosco()
+
+        tag_regexp = re.compile(r'<[^>]+>')
+
+
+        i = 0
+        for pagina in range(1,17):
+            entradas = fp.parse('https://ledoymipalabra.com/category/editoriales/feed?paged=' + str(pagina)).entries
+
+            print("leyendo " + str(len(entradas)) + " noticias de la pagina numero " + str(pagina) + " de las editoriales de '" + self.etiqueta + "'...")
+
+            for entrada in entradas:
+                i += 1
+
+                url = str(entrada.id)
+                
+                categoria = 'editorial'
+
+                #if url in urls_existentes:
+                if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+                    print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                    continue
+
+                print("parseando noticia " + str(i) + "/" + str(len(entradas)))
+                titulo = str(entrada.title)
+                texto = str(re.sub(tag_regexp,' ',str(entrada.content[0].value)))
+                fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
+
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+
+        print(self.etiqueta + " leyo " + str(len(self.noticias)))    
+
     def limpiar_texto(self, texto):
         regexp = re.compile(r'SEGUÍ LEYENDO[^$]+')
         texto = re.sub(regexp,' ',texto)
