@@ -37,7 +37,12 @@ class Infobae(Diario):
 
             url = str(entrada.link)
             
-            categoria = str(url.split('/')[3])
+            categoria = ''
+            try:
+                categoria = str(url.split('/')[3])
+            except:
+                continue
+
             if categoria == "america":
                 categoria = "internacional"
 
@@ -55,7 +60,7 @@ class Infobae(Diario):
             print("parseando noticia " + str(i) + "/" + str(len(entradas)))
             titulo = str(entrada.title)
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
-            fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
+            fecha = dateutil.parser.parse(entrada.published, ignoretz=True) - datetime.timedelta(hours=3)
 
             if categoria not in self.categorias:
                 continue
