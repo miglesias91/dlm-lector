@@ -16,7 +16,7 @@ from medios.diarios.telam import Telam
 from medios.diarios.perfil import Perfil
 from medios.diarios.ambito import Ambito
 from medios.diarios.tn import TN
-from medios.diarios.popular import Popular
+# from medios.diarios.popular import Popular
 from medios.diarios.diariodeleuco import DiarioDeLeuco
 from medios.diarios.casarosada import CasaRosada
 
@@ -25,6 +25,7 @@ from bd.kioscomongo import Kiosco
 from bd.resultados import Resultados
 
 from procesamiento.frecuenciasgcp import Frecuencias
+# from procesamiento.frecuenciasspacy import Frecuencias
 
 def leer_medio(medio):
 
@@ -63,7 +64,8 @@ def actualizar_resultados(medio):
 def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
 
-    medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular(), PaginaDoce(), DiarioDeLeuco()]
+    # medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular(), PaginaDoce(), DiarioDeLeuco()]
+    medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), PaginaDoce(), DiarioDeLeuco()]
     
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
