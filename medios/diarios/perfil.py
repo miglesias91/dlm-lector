@@ -36,7 +36,7 @@ class Perfil(Diario):
 
                 i += 1
                 #if url in urls_existentes:
-                if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+                if kiosco.contar_noticias(diario=self.etiqueta, url=url):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 

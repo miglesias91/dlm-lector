@@ -7,6 +7,7 @@ import yaml
 
 import pymongo
 from pymongo import MongoClient
+from pymongo.errors import OperationFailure, BulkWriteError
 
 from medios.diarios.noticia import Noticia
 
@@ -28,15 +29,32 @@ class Kiosco:
 
     def actualizar_diario(self, diario):
         # ver si hay q restarle 3 o 6 horas. probar en el servidor
-        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias]
+
+        # hago doble pasada para detectar duplicados
+        urls_dups = []
+        urls = []
+        for n in diario.noticias:
+            url = n.url
+            if url in urls:
+                urls_dups.append(url)
+            else:
+                urls.append(url)
+
+        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias if n.url not in urls_dups]
 
         if len(json_noticias) == 0:
         #     print("no hay noticias nuevas de '" + diario.etiqueta + "'")
         #     logging.warning("no hay noticias nuevas de '" + diario.etiqueta + "'")
             print("no hay noticias nuevas de '" + diario.etiqueta + "'")
             return 0
+        
+        try:
+            return self.bd.noticias.insert_many(json_noticias)
+        except BulkWriteError as bwe:
+            errores_que_no_son_de_duplicados = filter(lambda x: x['code'] != 11000, bwe.details['writeErrors'])
+            if len(errores_que_no_son_de_duplicados) > 0:
+                raise Exception(bwe.details)
 
-        return self.bd.noticias.insert_many(json_noticias)
 
     def noticias(self, fecha=None, diario=None, categorias=None, fecha_in=True, url_in=True, diario_in=True, cat_in=True, tit_in=True, text_in=True):
         query = {}
