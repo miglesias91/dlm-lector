@@ -24,7 +24,7 @@ class PaginaDoce(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        entradas = self.entradas_feed()[0:40]
+        entradas = self.entradas_feed()
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 
@@ -86,7 +86,7 @@ class PaginaDoce(Diario):
 
     def parsear_categoria(self, html):
         feed = bs(html, 'lxml')
-        categoria = feed.find(lambda tag: tag.name == 'div' and tag.get('class') == ['suplement']).text
+        categoria = feed.find(lambda tag: tag.name == 'h5' and tag.get('class') == ['current-tag']).text # aca es la joda
         signos = string.punctuation + "¡¿\n"
         return categoria.translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
 
