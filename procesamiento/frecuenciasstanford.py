@@ -10,7 +10,13 @@ from stanfordcorenlp import StanfordCoreNLP
 
 class Frecuencias:
     def __init__(self, noticias):
-        self.nlp = StanfordCoreNLP('http://localhost', port=9000)
+        with open('conexiones.json') as c:
+            j = json.load(c)
+            
+        servidor = j['corenlp']['servidor']
+        puerto = j['corenlp']['puerto']
+
+        self.nlp = StanfordCoreNLP(servidor, port=puerto)
         self.traductor_a_espaniol = Translator('eng', 'spa')
         self.traductor_a_ingles = Translator('spa', 'eng')
 
