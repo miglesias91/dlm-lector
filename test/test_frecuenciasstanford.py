@@ -28,7 +28,7 @@ class TestFrecuenciasStanford(unittest.TestCase):
         
         f = Frecuencias(notis)
         f.calcular()
-        f.resultados
+        print(f.resultados)
 
     def test_contar_anotaciones(self):
 
@@ -48,3 +48,9 @@ class TestFrecuenciasStanford(unittest.TestCase):
         freqs_titulo = f.contar_anotaciones(titulo_anotado)
         freqs_texto = f.contar_anotaciones(texto_anotado)
         print('fin')
+
+    def test_dummy(self):
+        print('OKARDO')
+
+# if __name__ == '__main__':
+#     unittest.main()
