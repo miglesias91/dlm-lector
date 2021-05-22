@@ -9,7 +9,14 @@ from nltk.stem import WordNetLemmatizer
 from stanfordcorenlp import StanfordCoreNLP
 
 class Frecuencias:
-    def __init__(self, noticias):
+    def __init__(self, noticias, config = None):
+        
+        if config is None:
+            # ajusto la config para usar stanforcorenlp
+            self.config = {'leer':['adjetivos','sustantivos','verbos','entidades'], 'lemma':['sustantivos']}
+        else:
+            self.config = config
+
         with open('conexiones.json') as c:
             j = json.load(c)
             
@@ -86,9 +93,11 @@ class Frecuencias:
         conteo = {'adjetivos':{}, 'sustantivos':{}, 'verbos':{}, 'entidades':{}}
 
         for t in anotado['tokens']:
-            if t['pos'] == 'ADJ' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
+            if 'adjetivos' in self.config['leer'] and t['pos'] == 'ADJ' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
                 
-                lemma = self.lemmatizar(t['lemma'], 'a')
+                lemma = t['lemma']
+                if 'adjetivos' in self.config['lemma']:
+                    lemma = self.lemmatizar(t['lemma'], 'a')
                 # if lemma in self.adjetivos_comunes:
                 #     continue
 
@@ -98,11 +107,13 @@ class Frecuencias:
                 else:
                     conteo['adjetivos'][k] = 1
 
-            if t['pos'] == 'NOUN' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
+            if 'sustantivos' in self.config['leer'] and t['pos'] == 'NOUN' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
                 
-                lemma = self.lemmatizar(t['lemma'], 'n')
-                if lemma in self.sustantivos_comunes:
-                    continue
+                lemma = t['lemma']
+                if 'sustantivos' in self.config['lemma']:
+                    lemma = self.lemmatizar(t['lemma'], 'n')
+                    if lemma in self.sustantivos_comunes:
+                        continue
 
                 k = lemma.lower().translate(str.maketrans('','', self.puntuacion))
                 if k in conteo['sustantivos']:
@@ -110,11 +121,13 @@ class Frecuencias:
                 else:
                     conteo['sustantivos'][k] = 1
 
-            if t['pos'] == 'VERB' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
+            if 'verbos' in self.config['leer'] and t['pos'] == 'VERB' and len(t['originalText']) > 2 and t['originalText'].lower() not in self.stopwords:
                 
-                lemma = self.lemmatizar(t['lemma'], 'v')
-                # if lemma in self.verbos_comunes:
-                #     continue
+                lemma = t['lemma']
+                if 'verbos' in self.config['lemma']:
+                    lemma = self.lemmatizar(t['lemma'], 'v')
+                    # if lemma in self.verbos_comunes:
+                    #     continue
 
                 k = lemma.lower().translate(str.maketrans('','', self.puntuacion))
                 if k in conteo['verbos']:
@@ -122,12 +135,13 @@ class Frecuencias:
                 else:
                     conteo['verbos'][k] = 1
 
-        for e in anotado['entitymentions']:
-                k = e['text']
-                if k in conteo['entidades']:
-                    conteo['entidades'][k] += 1
-                else:
-                    conteo['entidades'][k] = 1
+        if 'entidades' in self.config['leer']:
+            for e in anotado['entitymentions']:
+                    k = e['text']
+                    if k in conteo['entidades']:
+                        conteo['entidades'][k] += 1
+                    else:
+                        conteo['entidades'][k] = 1
 
         return conteo
         
