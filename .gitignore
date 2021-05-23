@@ -107,6 +107,7 @@ venv.bak/
 log.txt
 twitter.keys
 conexiones.json
+conexiones-oracle.json
 modelos/
 freqs/
 *.png
