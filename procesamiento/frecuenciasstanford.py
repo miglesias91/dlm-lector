@@ -13,7 +13,7 @@ class Frecuencias:
         
         if config is None:
             # ajusto la config para usar stanforcorenlp
-            self.config = {'leer':['adjetivos','sustantivos','verbos','entidades'], 'lemma':['sustantivos']}
+            self.config = {'leer':['adjetivos','sustantivos','verbos','entidades'], 'lemma':['']}
         else:
             self.config = config
 
