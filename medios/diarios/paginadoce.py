@@ -86,7 +86,7 @@ class PaginaDoce(Diario):
 
     def parsear_categoria(self, html):
         feed = bs(html, 'lxml')
-        categoria = feed.find(lambda tag: tag.name == 'div' and tag.get('class') == ['suplement']).text
+        categoria = feed.find(lambda tag: tag.name == 'h5' and tag.get('class') == ['current-tag']).text
         signos = string.punctuation + "¡¿\n"
         return categoria.translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
 
