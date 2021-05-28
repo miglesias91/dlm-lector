@@ -46,7 +46,8 @@ class Clarin(Diario):
     def entradas_feed(self):
         urls_fechas_titulo_categoria = []
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
-        feed = bs(urlopen(req).read(), 'html.parser')
+        rss = urlopen(req)
+        feed = bs(rss.read(), 'html.parser')
         for entrada in feed.find_all('url'):
              # creo objetos str xq sino mas adelante tira RecursionError.            
             url = str(entrada.loc.string)

@@ -7,7 +7,7 @@ from procesamiento.frecuenciasgcp import Frecuencias
 
 class Resultados:
     def __init__(self):
-        with open('conexiones.json') as c:
+        with open('conexiones-oracle.json') as c:
             j = json.load(c)
             
         usuario = j['resultados']['usuario']

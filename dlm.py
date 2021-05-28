@@ -32,7 +32,7 @@ def leer_medio(medio):
     try:
         medio.leer()
     except:
-        print('error leyendo ' + medio.etiqueta + ': ' + sys.exc_info()[0])
+        print('error leyendo ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
         return False
 
     try:

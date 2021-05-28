@@ -137,7 +137,7 @@ class Frecuencias:
 
         if 'entidades' in self.config['leer']:
             for e in anotado['entitymentions']:
-                    k = e['text']
+                    k = e['text'].translate(str.maketrans('','', self.puntuacion))
                     if k in conteo['entidades']:
                         conteo['entidades'][k] += 1
                     else:
