@@ -27,7 +27,7 @@ class CasaRosada(Diario):
         discursos = self.parsear_discursos(urls_discursos)
 
         for titulo, fecha, texto, url in discursos:
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria='todo', titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion='todo', titulo=titulo, texto=self.limpiar_texto(texto)))
 
 
     def leer_todo(self):
@@ -56,7 +56,7 @@ class CasaRosada(Diario):
             if url in urls_existentes:
                 continue
 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria='todo', titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion='todo', titulo=titulo, texto=self.limpiar_texto(texto)))
 
 
     def leer(self):
@@ -81,7 +81,8 @@ class CasaRosada(Diario):
                 texto = str(bs(re.sub(tag_regexp,' ',entrada.summary), features="lxml").text)
 
                 fecha = dateutil.parser.parse(entrada.published)
-                categoria = fecha.strftime('%H%M%S')
+                # seccion = fecha.strftime('%H%M%S')
+                seccion = 'alberto'
                 url = str(entrada.link)
 
                 # si ya se existe la noticia, no la descargo
@@ -89,7 +90,7 @@ class CasaRosada(Diario):
                     print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 
-                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def limpiar_texto(self, texto):
         primer_linea_regexp = re.compile(r'^[^\n]+\n')

@@ -78,7 +78,7 @@ def usage(parametros):
     print("--leer [MEDIO_1] [MEDIO_2] ... [MEDIO_N] - actualiza las noticias de todos los diarios, a menos que se especifiquen los MEDIOS en particular")
     print("--leer-historico - lee historico de 'casarosada': discursos desde la fecha hasta 2003")
     print("PARAMETROS OPCIONALES")
-    print("--categorias c1-c2-...-cn - lee noticias de las categorias c1, c2, ..., cn: CATEGORIAS DISPONIBLES: 'politica', 'economia', 'sociedad', 'internacional', 'cultura', 'espectaculos', 'deportes'")
+    print("--secciones s1-s2-...-sn - lee noticias de las secciones s1, s2, ..., sn: SECCIONES DISPONIBLES: 'politica', 'economia', 'sociedad', 'internacional', 'cultura', 'espectaculos', 'deportes'")
     print("--fecha AAAAMMDD - lee noticias con fecha AAAMMDD")
     print("--fecha AAAAMMDD-AAAAMMDD - lee noticias dentro del rango de fechas AAAAMMDD->AAAAMMDD")
     print("--solo-titulos - lee solo títulos")
@@ -92,7 +92,7 @@ def main():
         usage(None)
         sys.exit(2)
 
-    parametros = {'medios':args, 'fecha':datetime.datetime.now().date(), 'twittear':False, 'solo_titulos':False, 'categorias':''}
+    parametros = {'medios':args, 'fecha':datetime.datetime.now().date(), 'twittear':False, 'solo_titulos':False, 'secciones':''}
     for o, a in opts:
         if o == "--help" or o == "-h":
             accion=usage
@@ -112,8 +112,8 @@ def main():
 
             parametros['fecha'] = fecha
 
-        elif o == "--categorias":
-            parametros['categorias'] = a.split('-')
+        elif o == "--secciones":
+            parametros['secciones'] = a.split('-')
 
         elif o == "--solo-titulos":
             parametros['solo_titulos'] = True

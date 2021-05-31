@@ -29,19 +29,19 @@ class Frecuencias:
             if n.diario not in self.noticias[sfecha]:
                 self.noticias[sfecha][n.diario] = {}
 
-            if n.categoria not in self.noticias[sfecha][n.diario]:
-                self.noticias[sfecha][n.diario][n.categoria] = []
+            if n.seccion not in self.noticias[sfecha][n.diario]:
+                self.noticias[sfecha][n.diario][n.seccion] = []
 
-            self.noticias[sfecha][n.diario][n.categoria].append(n)
+            self.noticias[sfecha][n.diario][n.seccion].append(n)
 
     def calcular(self):
         notis = []
         for fecha, diarios in self.noticias.items():
-            for diario, categorias in diarios.items():
-                for categoria, noticias in categorias.items():
+            for diario, secciones in diarios.items():
+                for seccion, noticias in secciones.items():
                     f_ter_tit, f_ver_tit, f_per_tit, f_ter_txt, f_ver_txt, f_per_txt = self.__noticias2freqs__(noticias)
 
-                    resultado = {'fecha': fecha, 'diario': diario, 'categoria': categoria, 'total': len(noticias), 'ter_tit':f_ter_tit, 'ver_tit': f_ver_tit, 'per_tit': f_per_tit, 'ter_txt': f_ter_txt, 'ver_txt': f_ver_txt, 'per_txt': f_per_txt }
+                    resultado = {'fecha': fecha, 'diario': diario, 'seccion': seccion, 'total': len(noticias), 'ter_tit':f_ter_tit, 'ver_tit': f_ver_tit, 'per_tit': f_per_tit, 'ter_txt': f_ter_txt, 'ver_txt': f_ver_txt, 'per_txt': f_per_txt }
                     self.resultados.append(resultado)
 
     def tokens(self, titulo, texto):

@@ -28,12 +28,12 @@ class TestMedios(unittest.TestCase):
         cr = CasaRosada()
         cr.leer()
         
-    def test_reconcer_categoria_eldestape(self):
+    def test_reconcer_seccion_eldestape(self):
         articulo = np.Article(url="https://www.eldestapeweb.com/nota/copa-america-el-desplante-de-messi-a-la-conmebol-por-el-arbitraje-contra-chile-20197618140", language='es')
         articulo.download()
         articulo.parse()
 
         diario = ElDestape()
-        t = diario.reconocer_categoria(articulo.html)
+        t = diario.reconocer_seccion(articulo.html)
         return 1
 

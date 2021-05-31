@@ -24,7 +24,7 @@ class TestFrecuenciasStanford(unittest.TestCase):
         with open('noticias.json') as j:
             noticias = json.load(j)
 
-        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', categoria='', titulo=n['titulo']) for n in noticias['noticias']][:5]
+        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', seccion='', titulo=n['titulo']) for n in noticias['noticias']][:5]
         
         f = Frecuencias(notis)
         f.calcular()
@@ -35,7 +35,7 @@ class TestFrecuenciasStanford(unittest.TestCase):
         with open('noticias.json') as j:
             noticias = json.load(j)
 
-        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', categoria='', titulo=n['titulo']) for n in noticias['noticias']][:5]
+        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', seccion='', titulo=n['titulo']) for n in noticias['noticias']][:5]
         
         # f = Frecuencias(notis, config = {'leer':['sustantivos'], 'lemma':['']})
         f = Frecuencias(notis)

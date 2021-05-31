@@ -11,8 +11,8 @@ class TestLaNacion(unittest.TestCase):
 
     def test_entradas_feed(self):
         ln = LaNacion()
-        url_fecha_titulo_categoria = ln.entradas_feed()
-        return len(url_fecha_titulo_categoria) == 1000
+        url_fecha_titulo_seccion = ln.entradas_feed()
+        return len(url_fecha_titulo_seccion) == 1000
 
     def test_parsear_noticia(self):
         ln = LaNacion()

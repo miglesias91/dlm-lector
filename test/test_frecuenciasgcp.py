@@ -24,7 +24,7 @@ class TestFrecuenciasGCP(unittest.TestCase):
         with open('noticias.json') as j:
             noticias = json.load(j)
 
-        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', categoria='', titulo=n['titulo']) for n in noticias['noticias']][:10]
+        notis = [Noticia(texto = n['texto'], fecha=datetime.datetime.now(), url='', diario='', seccion='', titulo=n['titulo']) for n in noticias['noticias']][:10]
         
         f = Frecuencias(notis)
         f.calcular()

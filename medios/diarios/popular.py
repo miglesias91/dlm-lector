@@ -28,7 +28,7 @@ class Popular(Diario):
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 
         i = 0
-        for url, fecha, categoria in entradas:
+        for url, fecha, seccion in entradas:
             i += 1
 
             # if url in urls_existentes:
@@ -39,13 +39,13 @@ class Popular(Diario):
             print("descargando noticia " + str(i) + "/" + str(len(entradas)))
             titulo, texto = self.parsearNoticia(url)
 
-            if categoria == "futbol":
-                categoria = "deportes"
+            if seccion == "futbol":
+                seccion = "deportes"
             
-            if categoria not in self.categorias:
-                categoria = "varios"
+            if seccion not in self.secciones:
+                seccion = "varios"
 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def parsearNoticia(self, url):
         articulo = np.Article(url=url, language='es')
@@ -70,8 +70,8 @@ class Popular(Diario):
             url = str(campos.pop(0))
             try:
                 fecha = dateutil.parser.parse(campos.pop(0), ignoretz=True)
-                categoria = str(url.split('/')[3])
+                seccion = str(url.split('/')[3])
             except:
                 continue
-            tuplas.append((url, fecha, categoria))
+            tuplas.append((url, fecha, seccion))
         return tuplas

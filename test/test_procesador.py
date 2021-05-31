@@ -17,7 +17,7 @@ class TestProcesador(unittest.TestCase):
         with open('noticias.json') as j:
             noticias = json.load(j)
 
-        notis = [Noticia(texto = n['texto'], fecha='', url='', diario='', categoria='', titulo=n['titulo']) for n in noticias['noticias']]
+        notis = [Noticia(texto = n['texto'], fecha='', url='', diario='', seccion='', titulo=n['titulo']) for n in noticias['noticias']]
         
         fq = p.__noticias2freqs__(notis)
 

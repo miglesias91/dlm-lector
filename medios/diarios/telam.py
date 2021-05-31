@@ -25,13 +25,13 @@ class Telam(Diario):
 
         print("leyendo noticias de '" + self.etiqueta + "'...")
 
-        for categoria, url_feed in self.feeds.items():
+        for seccion, url_feed in self.feeds.items():
 
             i = 0
 
             entradas = self.entradas_feed(url_feed=url_feed)[0:5]
 
-            print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + categoria + "'...")
+            print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + seccion + "'...")
             for url, fecha, titulo in entradas:
 
                 i += 1
@@ -45,7 +45,7 @@ class Telam(Diario):
                 texto = self.parsear_noticia(url=url)
                 if texto == None:
                     continue
-                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=texto))
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=texto))
 
     def entradas_feed(self, url_feed):
         entradas = []

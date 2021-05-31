@@ -37,10 +37,10 @@ class DiarioDeLeuco(Diario):
 
             url = str(entrada.id)
             
-            categoria = 'todo'
+            seccion = 'todo'
             for tag in entrada.tags:
                 if tag['term'] == 'Le doy Mi Palabra':
-                    categoria = 'editorial'
+                    seccion = 'editorial'
 
             #if url in urls_existentes:
             if kiosco.contar_noticias(diario=self.etiqueta, url=url):
@@ -52,7 +52,7 @@ class DiarioDeLeuco(Diario):
             texto = str(re.sub(tag_regexp,' ',str(entrada.content[0].value)))
             fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
         print(self.etiqueta + " leyo " + str(len(self.noticias)))
 
@@ -73,10 +73,10 @@ class DiarioDeLeuco(Diario):
 
                 url = str(entrada.id)
                 
-                categoria = 'editorial'
+                seccion = 'editorial'
 
                 #if url in urls_existentes:
-                if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+                if kiosco.contar_noticias(diario=self.etiqueta, secciones=seccion, url=url):
                     print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                     continue
 
@@ -85,7 +85,7 @@ class DiarioDeLeuco(Diario):
                 texto = str(re.sub(tag_regexp,' ',str(entrada.content[0].value)))
                 fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
-                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+                self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
         print(self.etiqueta + " leyo " + str(len(self.noticias)))    
 

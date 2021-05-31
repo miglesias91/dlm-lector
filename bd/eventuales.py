@@ -1,3 +1,7 @@
+import json
+import datetime
+
+from pymongo import MongoClient
 
 from bd.kioscomongo import Kiosco
 
@@ -34,34 +38,34 @@ def subir_historicos(path_discursos_historicos):
             #     continue
 
             sfecha = fecha.strftime('%Y%m%d')
-            categoria = ""
+            seccion = ""
             if sfecha >= "20191210":
-                categoria = "alberto"
+                seccion = "alberto"
 
             if sfecha < "20191210" and sfecha >= "20151210":
-                categoria = "macri"
+                seccion = "macri"
 
             if sfecha < "20151210" and sfecha >= "20071210":
-                categoria = "cristina"
+                seccion = "cristina"
 
             if sfecha < "20071210":
-                categoria = "nestor"
+                seccion = "nestor"
 
-            # if self.contar_noticias(diario=diario, categorias=categoria, url=url):
+            # if self.contar_noticias(diario=diario, secciones=seccion, url=url):
             #     continue
-            if categoria != "nestor":
+            if seccion != "nestor":
                 continue
 
-            if resultados.bd.frecuencias.find_one({'diario': diario, 'categoria': categoria, 'fecha': fecha.strftime('%Y%m%d%H%M%S'), 'url':url}):
+            if resultados.bd.frecuencias.find_one({'diario': diario, 'seccion': seccion, 'fecha': fecha.strftime('%Y%m%d%H%M%S'), 'url':url}):
                 continue
 
-            while resultados.bd.frecuencias.find_one({'diario': diario, 'categoria': categoria, 'fecha': fecha.strftime('%Y%m%d%H%M%S')}):
+            while resultados.bd.frecuencias.find_one({'diario': diario, 'seccion': seccion, 'fecha': fecha.strftime('%Y%m%d%H%M%S')}):
                 fecha += datetime.timedelta(seconds=10)
 
             while existe_fecha(fecha, buffer_resultado):
                 fecha += datetime.timedelta(seconds=10)
 
-            # buffer_kiosco.append({'diario': diario, 'cat':categoria, 'fecha': fecha, 'url':url, 'titulo':titulo, 'texto':texto})
+            # buffer_kiosco.append({'diario': diario, 'cat':seccion, 'fecha': fecha, 'url':url, 'titulo':titulo, 'texto':texto})
 
             # if len(buffer_kiosco) >= 100:
             #     self.bd.noticias.insert_many(buffer_kiosco)
@@ -71,7 +75,7 @@ def subir_historicos(path_discursos_historicos):
 
             f_ter_tit, f_ver_tit, f_per_tit, f_ter_txt, f_ver_txt, f_per_txt = freqs.tituloytexto2freqs(titulo,texto)
 
-            buffer_resultado.append({'diario':diario, 'categoria': categoria, 'fecha': fecha.strftime('%Y%m%d%H%M%S'), 'url':url, 'f_ter_tit': f_ter_tit, 'f_ver_tit': f_ver_tit, 'f_per_tit': f_per_tit, 'f_ter_txt': f_ter_txt, 'f_ver_txt': f_ver_txt, 'f_per_txt': f_per_txt})
+            buffer_resultado.append({'diario':diario, 'seccion': seccion, 'fecha': fecha.strftime('%Y%m%d%H%M%S'), 'url':url, 'f_ter_tit': f_ter_tit, 'f_ver_tit': f_ver_tit, 'f_per_tit': f_per_tit, 'f_ter_txt': f_ter_txt, 'f_ver_txt': f_ver_txt, 'f_per_txt': f_per_txt})
 
             if len(buffer_resultado) >= 100:
                 resultados.bd.frecuencias.insert_many(buffer_resultado)
@@ -100,12 +104,53 @@ def resultados_editoriales():
     agregados = 0
 
     diario='diariodeleuco'
-    categoria='editorial'
-    editoriales = k.noticias(diario=diario, categorias=categoria)
+    seccion='editorial'
+    editoriales = k.noticias(diario=diario, secciones=seccion)
 
     buffer_resultado = []
     for e in editoriales:
         f_ter_tit, f_ver_tit, f_per_tit, f_ter_txt, f_ver_txt, f_per_txt = freqs.tituloytexto2freqs(e.titulo,e.texto)
-        buffer_resultado.append({'diario':diario, 'categoria': categoria, 'fecha': e.fecha.strftime('%Y%m%d%H%M%S'), 'url':e.url, 'f_ter_tit': f_ter_tit, 'f_ver_tit': f_ver_tit, 'f_per_tit': f_per_tit, 'f_ter_txt': f_ter_txt, 'f_ver_txt': f_ver_txt, 'f_per_txt': f_per_txt})
+        buffer_resultado.append({'diario':diario, 'seccion': seccion, 'fecha': e.fecha.strftime('%Y%m%d%H%M%S'), 'url':e.url, 'f_ter_tit': f_ter_tit, 'f_ver_tit': f_ver_tit, 'f_per_tit': f_per_tit, 'f_ter_txt': f_ter_txt, 'f_ver_txt': f_ver_txt, 'f_per_txt': f_per_txt})
 
     resultados.bd.frecuencias.insert_many(buffer_resultado)
+
+def discursos_freqs():
+    freqs = Frecuencias()
+
+    with open('/home/manu/repos/dlm/discursos.json') as f:
+        discursos = f.readlines()
+
+    print('discursos totales: ' + str(len(discursos)))
+    buffer_resultado = []
+    i = 1
+    for discurso in discursos:
+        d = json.loads(discurso)
+
+        fecha = datetime.datetime.strptime(d['fecha']['$date'], '%Y-%m-%dT%H:%M:%SZ')
+
+        sfecha = fecha.strftime('%Y%m%d')
+        presidente = ""
+        if sfecha >= "20191210":
+            presidente = "alberto"
+
+        if sfecha < "20191210" and sfecha >= "20151210":
+            presidente = "macri"
+
+        if sfecha < "20151210" and sfecha >= "20071210":
+            presidente = "cristina"
+
+        if sfecha < "20071210":
+            presidente = "nestor"
+        
+        adjtit, sustit, vertit, enttit, adjtxt, sustxt, vertxt, enttxt = freqs.tituloytexto2freqs(d['titulo'], d['texto'])
+        buffer_resultado.append({
+            'presidente': presidente, 'fecha': d['fecha']['$date'], 'url':d['url'],
+            'adjtit': adjtit, 'sustit': sustit, 'vertit': vertit, 'enttit': enttit,
+            'adjtxt': adjtxt, 'sustxt': sustxt, 'vertxt': vertxt, 'enttxt': enttxt
+            })
+        
+        print(str(i))
+        i = i + 1
+
+    bd = MongoClient().dlm
+    bd.frecuencias_discursos.insert_many(buffer_resultado)
