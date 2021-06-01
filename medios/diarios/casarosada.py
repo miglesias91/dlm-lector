@@ -87,9 +87,10 @@ class CasaRosada(Diario):
 
                 # si ya se existe la noticia, no la descargo
                 if kiosco.contar_noticias(diario=self.etiqueta, url=url):
-                    print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
+                    print("     noticia " + str(i) + "/" + str(len(entradas)) +" ya parseada")
                     continue
-
+                
+                print("     parseando noticia " + str(i) + "/" + str(len(entradas)))
                 self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def limpiar_texto(self, texto):

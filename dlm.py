@@ -1,3 +1,4 @@
+from bd.eventuales import discursos_freqs
 import getopt, sys
 import time
 import json
@@ -39,7 +40,7 @@ def leer_medio(medio):
         kiosco = Kiosco()
         kiosco.actualizar_diario(medio)
     except:
-        print('error actualizando noticias de ' + medio.etiqueta)
+        print('error actualizando noticias de ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
         return False
 
     return True
@@ -49,14 +50,45 @@ def actualizar_resultados(medio):
     try:
         frecuencias.calcular()
     except:
-        print('error calculando frecuencias de ' + medio.etiqueta)
+        print('error calculando frecuencias de ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
         return False
 
     resultados = Resultados()
     try:
         resultados.actualizar_freqs(frecuencias.resultados)
     except:
-        print('error actualizando frecuencias de ' + medio.etiqueta)
+        print('error actualizando frecuencias de ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
+        return False
+
+    return True
+
+def actualizar_resultados_discursos(medio):
+    frecuencias = Frecuencias([])
+    freqs_discursos = []
+    try:
+        for discurso in medio.noticias:
+            tokens_tit, tokens_txt = frecuencias.tokens(discurso.titulo, discurso.texto)
+            resultado = {
+                'presidente': discurso.seccion, 'fecha': discurso.fecha.strftime('%Y%m%d'), 'hora': discurso.fecha.strftime('%H%M%S'), 'url' : discurso.url,
+                'adjtit': frecuencias.top(tokens_tit['adjetivos'], 30),
+                'sustit': frecuencias.top(tokens_tit['sustantivos'], 30),
+                'vertit': frecuencias.top(tokens_tit['verbos'], 30),
+                'enttit': frecuencias.top(tokens_tit['entidades'], 30), 
+                'adjtxt': frecuencias.top(tokens_txt['adjetivos'], 50),
+                'sustxt': frecuencias.top(tokens_txt['sustantivos'], 50),
+                'vertxt': frecuencias.top(tokens_txt['verbos'], 50),
+                'enttxt': frecuencias.top(tokens_txt['entidades'], 50)
+                }
+            freqs_discursos.append(resultado)
+    except:
+        print('error calculando frecuencias de ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
+        return False
+
+    resultados = Resultados()
+    try:
+        resultados.bd.frecuencias_discursos.insert_many(freqs_discursos)
+    except:
+        print('error actualizando frecuencias de ' + medio.etiqueta + ': ' + str(sys.exc_info()[0]))
         return False
 
     return True
@@ -70,7 +102,11 @@ def leer_medios(parametros):
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
            if leer_medio(medio):
-                actualizar_resultados(medio)
+               if medio.etiqueta is 'casarosada':
+                   actualizar_resultados_discursos(medio)
+                   continue
+               actualizar_resultados(medio)
+
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")

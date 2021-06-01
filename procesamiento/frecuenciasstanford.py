@@ -204,13 +204,13 @@ class Frecuencias:
 
             freq_adjetivos_titulo = Frecuencias.sumar_freqs(freq_adjetivos_titulo, tokens_titulo['adjetivos'], 30)
             freq_sustantivos_titulo = Frecuencias.sumar_freqs(freq_sustantivos_titulo, tokens_titulo['sustantivos'], 30)
-            freq_verbos_titulo = Frecuencias.sumar_freqs(freq_verbos_titulo, tokens_titulo['verbos'], 15)
-            freq_entidades_titulo = Frecuencias.sumar_freqs(freq_entidades_titulo, tokens_titulo['entidades'], 15)
+            freq_verbos_titulo = Frecuencias.sumar_freqs(freq_verbos_titulo, tokens_titulo['verbos'], 30)
+            freq_entidades_titulo = Frecuencias.sumar_freqs(freq_entidades_titulo, tokens_titulo['entidades'], 30)
 
             freq_adjetivos_texto = Frecuencias.sumar_freqs(freq_adjetivos_texto, tokens_texto['adjetivos'], 50)
             freq_sustantivos_texto = Frecuencias.sumar_freqs(freq_sustantivos_texto, tokens_texto['sustantivos'], 50)
-            freq_verbos_texto = Frecuencias.sumar_freqs(freq_verbos_texto, tokens_texto['verbos'], 15)
-            freq_entidades_texto = Frecuencias.sumar_freqs(freq_entidades_texto, tokens_texto['entidades'], 15)
+            freq_verbos_texto = Frecuencias.sumar_freqs(freq_verbos_texto, tokens_texto['verbos'], 50)
+            freq_entidades_texto = Frecuencias.sumar_freqs(freq_entidades_texto, tokens_texto['entidades'], 50)
 
         return freq_adjetivos_titulo, freq_sustantivos_titulo, freq_verbos_titulo, freq_entidades_titulo, freq_adjetivos_texto, freq_sustantivos_texto, freq_verbos_texto, freq_entidades_texto
 
@@ -287,6 +287,10 @@ class Frecuencias:
                 freqs[k] += v
             else:
                 freqs[k] = v
+        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
+
+    @staticmethod
+    def top(freqs, top):
         return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
 

@@ -117,6 +117,15 @@ def resultados_editoriales():
 def discursos_freqs():
     freqs = Frecuencias()
 
+    with open('/home/manu/repos/dlm/lector/conexiones-oracle.json') as c:
+        j = json.load(c)
+        
+    usuario = j['resultados']['usuario']
+    pwd = j['resultados']['pwd']
+    server = j['resultados']['server']
+
+    conexion = "mongodb://" + usuario + ":" + pwd + "@" + server + "/"
+
     with open('/home/manu/repos/dlm/discursos.json') as f:
         discursos = f.readlines()
 
@@ -129,6 +138,7 @@ def discursos_freqs():
         fecha = datetime.datetime.strptime(d['fecha']['$date'], '%Y-%m-%dT%H:%M:%SZ')
 
         sfecha = fecha.strftime('%Y%m%d')
+        shora = fecha.strftime('%H%M%S')
         presidente = ""
         if sfecha >= "20191210":
             presidente = "alberto"
@@ -144,7 +154,7 @@ def discursos_freqs():
         
         adjtit, sustit, vertit, enttit, adjtxt, sustxt, vertxt, enttxt = freqs.tituloytexto2freqs(d['titulo'], d['texto'])
         buffer_resultado.append({
-            'presidente': presidente, 'fecha': d['fecha']['$date'], 'url':d['url'],
+            'presidente': presidente, 'fecha': sfecha, 'hora': shora,'url':d['url'],
             'adjtit': adjtit, 'sustit': sustit, 'vertit': vertit, 'enttit': enttit,
             'adjtxt': adjtxt, 'sustxt': sustxt, 'vertxt': vertxt, 'enttxt': enttxt
             })
@@ -152,5 +162,5 @@ def discursos_freqs():
         print(str(i))
         i = i + 1
 
-    bd = MongoClient().dlm
+    bd = MongoClient(conexion).resultados
     bd.frecuencias_discursos.insert_many(buffer_resultado)

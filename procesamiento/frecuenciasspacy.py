@@ -160,4 +160,8 @@ class Frecuencias:
                 freqs[k] = v
         return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
+    @staticmethod
+    def top(freqs, top):
+        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
+
 

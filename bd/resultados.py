@@ -17,7 +17,6 @@ class Resultados:
         conexion = "mongodb://" + usuario + ":" + pwd + "@" + server + "/"
 
         self.bd = MongoClient(conexion).resultados
-
         
     def actualizar_freqs(self, resultados):
         for r in resultados:
@@ -49,3 +48,4 @@ class Resultados:
             'adjtxt': adjtxt, 'sustxt': sustxt, 'vertxt': vertxt, 'enttxt': enttxt
             }
             self.bd.frecuencias.find_one_and_replace(query, doc, upsert=True)
+
