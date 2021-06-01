@@ -192,16 +192,6 @@ class Frecuencias:
 
             tokens_titulo, tokens_texto = self.tokens(noticia.titulo, noticia.texto)
 
-            # nuevas_freq_adjetivos_titulo = self.freq_adjetivos(tokens_titulo['adjetivos'], 30)
-            # nuevas_freq_sustantivos_titulo = self.freq_sustantivos(tokens_titulo['sustantivos'], 30)
-            # nuevas_freq_verbos_titulo = self.freq_verbos(tokens_titulo['verbos'], 15)
-            # nuevas_freq_entidades_titulo = self.freq_entidades(tokens_titulo['entidades'], 15)
-
-            # nuevas_freq_adjetivos_texto = self.freq_adjetivos([tokens_texto['adjetivos'], 50)
-            # nuevas_freq_sustantivos_texto = self.freq_sustantivo([tokens_texto['sustantivos'], 50)
-            # nuevas_freq_verbos_texto = self.freq_verbos(tokens_texto['verbos'], 15)
-            # nuevas_freq_entidades_texto = self.freq_entidades(tokens_texto['entidades'], 15)
-
             freq_adjetivos_titulo = Frecuencias.sumar_freqs(freq_adjetivos_titulo, tokens_titulo['adjetivos'], 30)
             freq_sustantivos_titulo = Frecuencias.sumar_freqs(freq_sustantivos_titulo, tokens_titulo['sustantivos'], 30)
             freq_verbos_titulo = Frecuencias.sumar_freqs(freq_verbos_titulo, tokens_titulo['verbos'], 30)
@@ -213,72 +203,6 @@ class Frecuencias:
             freq_entidades_texto = Frecuencias.sumar_freqs(freq_entidades_texto, tokens_texto['entidades'], 50)
 
         return freq_adjetivos_titulo, freq_sustantivos_titulo, freq_verbos_titulo, freq_entidades_titulo, freq_adjetivos_texto, freq_sustantivos_texto, freq_verbos_texto, freq_entidades_texto
-
-    def freq_adjetivos(self, tokens, top):
-        freqs = {}
-        for t in tokens:
-            if t['pos'] == 'ADJ' and len(t['originalText']) and t['lemma'] not in self.adjetivos_comunes and t['originalText'].lower() not in self.stopwords:
-            # if t.part_of_speech.tag == types.PartOfSpeech.Tag.NOUN and t.part_of_speech.proper == types.PartOfSpeech.Proper.NOT_PROPER and len(t.text.content) > 2 and t.lemma.lower() not in self.sustantivos_comunes and t.text.content.lower() not in self.stopwords:
-                k = t['lemma'].lower().translate(str.maketrans('','', self.puntuacion))
-                if k in freqs:
-                    freqs[k] += 1
-                else:
-                    freqs[k] = 1
-
-        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
-
-    def freq_sustantivos(self, tokens, top):
-        freqs = {}
-        for t in tokens:
-            if t['pos'] == 'NOUN' and len(t['originalText']) and t['lemma'] not in self.sustantivos_comunes and t['originalText'].lower() not in self.stopwords:
-            # if t.part_of_speech.tag == types.PartOfSpeech.Tag.NOUN and t.part_of_speech.proper == types.PartOfSpeech.Proper.NOT_PROPER and len(t.text.content) > 2 and t.lemma.lower() not in self.sustantivos_comunes and t.text.content.lower() not in self.stopwords:
-                k = t['lemma'].lower().translate(str.maketrans('','', self.puntuacion))
-                if k in freqs:
-                    freqs[k] += 1
-                else:
-                    freqs[k] = 1
-
-        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
-
-    def freq_verbos(self, tokens, top):
-        freqs = {}
-        for t in tokens:
-            if t['pos'] == 'NOUN' and len(t['originalText']) and t['lemma'] not in self.sustantivos_comunes and t['originalText'].lower() not in self.stopwords:
-            # if t.part_of_speech.tag == types.PartOfSpeech.Tag.VERB:
-                k = t.lemma.lower().translate(str.maketrans('','', self.puntuacion))
-                if k in freqs:
-                    freqs[k] += 1
-                else:
-                    freqs[k] = 1
-
-        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
-
-    def freq_entidades(self, tokens, top):
-        freqs = {}
-
-        k = []
-        for t in tokens:
-            if t.part_of_speech.tag == types.PartOfSpeech.Tag.NOUN and t.part_of_speech.proper == types.PartOfSpeech.Proper.PROPER:
-                k.append(t.text.content.translate(str.maketrans('','', self.puntuacion)))
-                continue
-
-            if len(k):
-                k = ' '.join(k)
-                if k in freqs:
-                    freqs[k] += 1
-                else:
-                    freqs[k] = 1
-                k = []
-
-        # chequeo si justo no habia una persona en la última palabra.
-        if len(k):
-            k = ' '.join(k)
-            if k in freqs:
-                freqs[k] += 1
-            else:
-                freqs[k] = 1            
-
-        return {k: v for k, v in sorted(freqs.items(), key=lambda item: item[1], reverse=True)[:top]}
 
     @staticmethod
     def sumar_freqs(freqs, freqs_nuevas, top):
