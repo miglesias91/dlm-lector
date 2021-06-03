@@ -102,6 +102,11 @@ class Frecuencias:
                 #     continue
 
                 k = lemma.lower().translate(str.maketrans('','', self.puntuacion))
+                
+                # filtro los numeros q no son años
+                if k.isdigit() and len(k) is not 4:
+                    continue
+
                 if k in conteo['adjetivos']:
                     conteo['adjetivos'][k] += 1
                 else:
@@ -116,6 +121,11 @@ class Frecuencias:
                         continue
 
                 k = lemma.lower().translate(str.maketrans('','', self.puntuacion))
+                
+                # filtro los numeros q no son años
+                if k.isdigit() and len(k) is not 4:
+                    continue
+
                 if k in conteo['sustantivos']:
                     conteo['sustantivos'][k] += 1
                 else:
@@ -130,6 +140,11 @@ class Frecuencias:
                     #     continue
 
                 k = lemma.lower().translate(str.maketrans('','', self.puntuacion))
+
+                # filtro los numeros q no son años
+                if k.isdigit() and len(k) is not 4:
+                    continue
+
                 if k in conteo['verbos']:
                     conteo['verbos'][k] += 1
                 else:
@@ -138,6 +153,11 @@ class Frecuencias:
         if 'entidades' in self.config['leer']:
             for e in anotado['entitymentions']:
                     k = e['text'].translate(str.maketrans('','', self.puntuacion))
+
+                    # filtro los numeros q no son años
+                    if k.isdigit() and len(k) is not 4:
+                        continue
+
                     if k in conteo['entidades']:
                         conteo['entidades'][k] += 1
                     else:
