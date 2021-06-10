@@ -8,8 +8,8 @@ class TestClarin(unittest.TestCase):
 
     def test_entradas_feed(self):
         c = Clarin()
-        url_fecha_titulo_categoria = c.entradas_feed()
-        return len(url_fecha_titulo_categoria) == 1000
+        url_fecha_titulo_seccion = c.entradas_feed()
+        return len(url_fecha_titulo_seccion) == 1000
 
     def test_parsear_noticia(self):
         c = Clarin()

@@ -11,3 +11,6 @@ class TestEventuales(unittest.TestCase):
 
     def test_subir_resultados_editoriales(self):
         bd.eventuales.resultados_editoriales()
+
+    def test_discursos_freq(self):
+        bd.eventuales.discursos_freqs()

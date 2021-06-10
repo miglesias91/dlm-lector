@@ -28,7 +28,7 @@ class LaNacion(Diario):
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 
         i = 0
-        for url, fecha, titulo, categoria in entradas:
+        for url, fecha, titulo, seccion in entradas:
             
             i += 1
 
@@ -41,27 +41,27 @@ class LaNacion(Diario):
             texto = self.parsear_noticia(url=url)
             if texto == None:
                 continue
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=texto))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=texto))
 
     def entradas_feed(self):
-        urls_fechas_titulo_categoria = []
+        urls_fechas_titulo_seccion = []
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
         feed = bs(urlopen(req).read(), 'html.parser')
         for entrada in feed.find_all('url'):
             url = str(entrada.loc.string)
             fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
             titulo = str(entrada.find('news:title').string)
-            categoria = str(url.split('/')[3])
+            seccion = str(url.split('/')[3])
 
-            if categoria == "el-mundo":
-                categoria = "internacional"
+            if seccion == "el-mundo":
+                seccion = "internacional"
 
-            if categoria not in self.categorias:
+            if seccion not in self.secciones:
                 continue
 
-            urls_fechas_titulo_categoria.append((url, fecha, titulo, categoria))
+            urls_fechas_titulo_seccion.append((url, fecha, titulo, seccion))
             
-        return urls_fechas_titulo_categoria
+        return urls_fechas_titulo_seccion
 
     def parsear_noticia(self, url):
         articulo = np.Article(url=url, language='es')

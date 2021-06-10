@@ -8,8 +8,8 @@ class TestElDestape(unittest.TestCase):
 
     def test_entradas_feed(self):
         ed = ElDestape()
-        url_fecha_titulo_categoria = ed.entradas_feed()
-        return len(url_fecha_titulo_categoria) == 50
+        url_fecha_titulo_seccion = ed.entradas_feed()
+        return len(url_fecha_titulo_seccion) == 50
 
     def test_parsear_noticia(self):
         ed = ElDestape()

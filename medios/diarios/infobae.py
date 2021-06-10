@@ -37,23 +37,23 @@ class Infobae(Diario):
 
             url = str(entrada.link)
             
-            categoria = ''
+            seccion = ''
             try:
-                categoria = str(url.split('/')[3])
+                seccion = str(url.split('/')[3])
             except:
                 continue
 
-            if categoria == "america":
-                categoria = "internacional"
+            if seccion == "america":
+                seccion = "internacional"
 
-            if categoria == "teleshow":
-                categoria = "espectaculos"
+            if seccion == "teleshow":
+                seccion = "espectaculos"
 
-            if categoria == "deportes-2":
-                categoria = "deportes"
+            if seccion == "deportes-2":
+                seccion = "deportes"
 
             #if url in urls_existentes:
-            if kiosco.contar_noticias(diario=self.etiqueta, categorias=categoria, url=url):
+            if kiosco.contar_noticias(diario=self.etiqueta, secciones=seccion, url=url):
                 print("noticia " + str(i) + "/" + str(len(entradas)) +" ya descargada")
                 continue
 
@@ -62,10 +62,10 @@ class Infobae(Diario):
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
             fecha = dateutil.parser.parse(entrada.published, ignoretz=True) - datetime.timedelta(hours=3)
 
-            if categoria not in self.categorias:
+            if seccion not in self.secciones:
                 continue
 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
         print(self.etiqueta + " leyo " + str(len(self.noticias)))
 

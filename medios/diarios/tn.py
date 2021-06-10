@@ -35,12 +35,12 @@ class TN(Diario):
 
             url = str(entrada.link)
             
-            categoria = str(url.split('/')[3])
+            seccion = str(url.split('/')[3])
 
-            if categoria == "show":
-                categoria = "espectaculos"
+            if seccion == "show":
+                seccion = "espectaculos"
 
-            if categoria not in self.categorias:
+            if seccion not in self.secciones:
                 continue
 
             # if url in urls_existentes:
@@ -53,7 +53,7 @@ class TN(Diario):
             texto = str(re.sub(tag_regexp,' ',entrada.content[0].value))
             fecha = dateutil.parser.parse(entrada.published, ignoretz=True)  - datetime.timedelta(hours=3)
 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
         print(self.etiqueta + " leyo " + str(len(self.noticias)))
 

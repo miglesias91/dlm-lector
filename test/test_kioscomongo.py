@@ -25,8 +25,8 @@ class TestKiosco(unittest.TestCase):
 
         #fecha = datetime.datetime(year = 2020, month = 8, day = 25)
         fecha = {'desde' : datetime.datetime(year = 2020, month = 8, day = 22), 'hasta' : datetime.datetime(year = 2020, month = 8, day = 24)}
-        categoria = ['economia', 'internacional']
-        conteo = k.contar_noticias(fecha = fecha, diario = 'test_todos', categorias = categoria)
+        seccion = ['economia', 'internacional']
+        conteo = k.contar_noticias(fecha = fecha, diario = 'test_todos', secciones = seccion)
         conteo
 
     def test_urls(self):
@@ -34,7 +34,7 @@ class TestKiosco(unittest.TestCase):
 
         fecha = datetime.datetime(year = 2020, month = 8, day = 26)
         #fecha = {'desde' : datetime.datetime(year = 2020, month = 8, day = 22), 'hasta' : datetime.datetime(year = 2020, month = 8, day = 24)}
-        #categoria = ['economia', 'internacional']
+        #seccion = ['economia', 'internacional']
         urls = k.urls(diario = 'clarin')
         urls
 

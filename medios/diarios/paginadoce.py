@@ -39,14 +39,14 @@ class PaginaDoce(Diario):
                 continue
 
             print("descargando noticia " + str(i) + "/" + str(len(entradas)))
-            categoria, titulo, texto = self.parsear_noticia(url=url)
+            seccion, titulo, texto = self.parsear_noticia(url=url)
             if texto == None:
                 continue
 
-            if categoria not in self.categorias:
+            if seccion not in self.secciones:
                 continue
                 
-            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, categoria=categoria, titulo=titulo, texto=self.limpiar_texto(texto)))
+            self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=self.limpiar_texto(texto)))
 
     def entradas_feed(self):
         urls_fechas = []
@@ -70,25 +70,25 @@ class PaginaDoce(Diario):
             return None
         
         signos = string.punctuation + "¡¿\n"
-        # categoria = articulo.meta_keywords[0].translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
-        categoria = self.parsear_categoria(articulo.html)
+        # seccion = articulo.meta_keywords[0].translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
+        seccion = self.parsear_seccion(articulo.html)
 
-        if categoria == "el pais":
-            categoria = "politica"
+        if seccion == "el pais":
+            seccion = "politica"
 
-        if categoria == "el mundo":
-            categoria = "internacional"
+        if seccion == "el mundo":
+            seccion = "internacional"
 
-        if categoria == "cultura y espectaculos":
-            categoria = "espectaculos"            
+        if seccion == "cultura y espectaculos":
+            seccion = "espectaculos"            
 
-        return  str(categoria), str(articulo.title), str(articulo.text)
+        return  str(seccion), str(articulo.title), str(articulo.text)
 
-    def parsear_categoria(self, html):
+    def parsear_seccion(self, html):
         feed = bs(html, 'lxml')
-        categoria = feed.find(lambda tag: tag.name == 'h5' and tag.get('class') == ['current-tag']).text # aca es la joda
+        seccion = feed.find(lambda tag: tag.name == 'h5' and tag.get('class') == ['current-tag']).text
         signos = string.punctuation + "¡¿\n"
-        return categoria.translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
+        return seccion.translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower()
 
     def limpiar_texto(self, texto):
         regexp = re.compile(r'Loading tweet ...')

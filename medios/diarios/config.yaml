@@ -4,7 +4,7 @@ diarios:
     twitter: "@LANACION"
     hashtag: "#LaNacion"
     feed_noticias: "https://www.lanacion.com.ar/ln-news.xml"
-    categorias:
+    secciones:
       - "politica"
       - "economia"
       - "sociedad"
@@ -30,7 +30,7 @@ diarios:
     twitter: "@clarincom"
     hashtag: "#Clarin"
     feed_noticias: "https://www.clarin.com/sitemap_google_news.xml"
-    categorias:
+    secciones:
       - "politica"
       - "economia"
       - "sociedad"
@@ -58,7 +58,7 @@ diarios:
     twitter: "@infobae"
     hashtag: "#Infobae"
     feed_noticias: "https://www.infobae.com/feeds/rss/"
-    categorias:
+    secciones:
       - "politica"
       - "economia"
       - "sociedad"
@@ -79,7 +79,7 @@ diarios:
     twitter: "@pagina12"
     hashtag: "#Pagina12"
     feed_noticias: "https://www.pagina12.com.ar/breakingnews.xml"
-    categorias:
+    secciones:
       - "politica"
       - "economia"
       - "sociedad"
@@ -104,7 +104,7 @@ diarios:
     twitter: "@eldestapeweb"
     hashtag: "#ElDestape"
     feed_noticias: "https://www.eldestapeweb.com/sitemap-news.xml"
-    categorias: 
+    secciones: 
       - "politica"
       - "economia"
       - "sociedad"
@@ -233,7 +233,7 @@ diarios:
     twitter: "@todonoticias"
     hashtag: "#TN"
     feed_noticias: "https://tn.com.ar/arcio/google-news-feed/"
-    categorias:
+    secciones:
       - "deportes"
       - "policiales"
       - "sociedad"
@@ -253,7 +253,7 @@ diarios:
     twitter: "@populardiario"
     hashtag: "#DiarioPopular"
     feed_noticias: "https://www.diariopopular.com.ar/sitemap.xml"
-    categorias:
+    secciones:
       - "general"
       - "politica"
       - "economia"
@@ -270,7 +270,7 @@ diarios:
     twitter: "@eldiariodeleuco"
     hashtag: "#DiarioDeLeuco"
     feed_noticias: "https://ledoymipalabra.com/feed"
-    categorias:
+    secciones:
       - "editorial"
       - "todo"
 

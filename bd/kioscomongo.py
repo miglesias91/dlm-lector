@@ -16,7 +16,7 @@ from procesamiento.frecuenciasspacy import Frecuencias
 
 class Kiosco:
     def __init__(self, fecha=None):
-        with open('conexiones.json') as c:
+        with open('conexiones-oracle.json') as c:
             j = json.load(c)
             
         usuario = j['kiosco']['usuario']
@@ -40,7 +40,7 @@ class Kiosco:
             else:
                 urls.append(url)
 
-        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'cat':n.categoria,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias if n.url not in urls_dups]
+        json_noticias = [{'fecha':n.fecha, 'url':n.url, 'diario':n.diario, 'seccion':n.seccion,'titulo':n.titulo, 'texto':n.texto} for n in diario.noticias if n.url not in urls_dups]
 
         if len(json_noticias) == 0:
         #     print("no hay noticias nuevas de '" + diario.etiqueta + "'")
@@ -56,7 +56,7 @@ class Kiosco:
                 raise Exception(bwe.details)
 
 
-    def noticias(self, fecha=None, diario=None, categorias=None, fecha_in=True, url_in=True, diario_in=True, cat_in=True, tit_in=True, text_in=True):
+    def noticias(self, fecha=None, diario=None, secciones=None, fecha_in=True, url_in=True, diario_in=True, seccion_in=True, tit_in=True, text_in=True):
         query = {}
 
         if fecha:
@@ -71,19 +71,19 @@ class Kiosco:
         if diario:
             query['diario']=diario
 
-        if categorias:
-            if type(categorias) is list:
-                query['cat']={"$in":categorias}
+        if secciones:
+            if type(secciones) is list:
+                query['seccion']={"$in":secciones}
             else:
-                query['cat']={"$in":[categorias]}
+                query['seccion']={"$in":[secciones]}
 
-        projection = {'fecha':fecha_in, 'url':url_in, 'diario':diario_in, 'cat':cat_in, 'titulo':tit_in, 'texto':text_in }
+        projection = {'fecha':fecha_in, 'url':url_in, 'diario':diario_in, 'seccion':seccion_in, 'titulo':tit_in, 'texto':text_in }
 
         cursor = self.bd.noticias.find(query, projection)
 
-        return [Noticia(fecha=n['fecha'], url=n['url'], diario=n['diario'], categoria=n['cat'], titulo=n['titulo'], texto=n['texto']) for n in cursor]
+        return [Noticia(fecha=n['fecha'], url=n['url'], diario=n['diario'], seccion=n['seccion'], titulo=n['titulo'], texto=n['texto']) for n in cursor]
 
-    def contar_noticias(self, fecha=None, diario=None, categorias=None, url=None):
+    def contar_noticias(self, fecha=None, diario=None, secciones=None, url=None):
         query = {}
 
         if fecha:
@@ -98,18 +98,18 @@ class Kiosco:
         if diario:
             query['diario']=diario
 
-        if categorias:
-            if type(categorias) is list:
-                query['cat']={"$in":categorias}
+        if secciones:
+            if type(secciones) is list:
+                query['seccion']={"$in":secciones}
             else:
-                query['cat']={"$in":[categorias]}
+                query['seccion']={"$in":[secciones]}
 
         if url:
             query['url']=url
 
         return self.bd.noticias.count_documents(query)
 
-    def categorias_existentes(self, fecha=None, diario=None, url=None):
+    def secciones_existentes(self, fecha=None, diario=None, url=None):
         query = {}
 
         if fecha:
@@ -127,9 +127,9 @@ class Kiosco:
         if url:
             query['url']=url
 
-        return self.bd.noticias.distinct("cat", query)
+        return self.bd.noticias.distinct("seccion", query)
     
-    def urls_recientes(self, fecha=None, diario=None, categoria=None, limite = 100):
+    def urls_recientes(self, fecha=None, diario=None, seccion=None, limite = 100):
         query = {}
 
         if fecha:
@@ -144,8 +144,8 @@ class Kiosco:
         if diario:
             query['diario']=diario
 
-        if categoria:
-            query['cat']=categoria
+        if seccion:
+            query['seccion']=seccion
 
         projection = {'url':True}
 

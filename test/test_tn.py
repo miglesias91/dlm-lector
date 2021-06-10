@@ -8,8 +8,8 @@ class TestTN(unittest.TestCase):
 
     def test_entradas_feed(self):
         tn = TN()
-        url_fecha_titulo_categoria = tn.entradas_feed()
-        return len(url_fecha_titulo_categoria) > 200
+        url_fecha_titulo_seccion = tn.entradas_feed()
+        return len(url_fecha_titulo_seccion) > 200
 
     def test_parsear_noticia(self):
         tn = TN()

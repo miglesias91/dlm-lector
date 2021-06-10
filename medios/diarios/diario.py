@@ -17,7 +17,7 @@ class Diario(Medio):
         self.noticias = []
         self.feeds = {}
         self.feed_noticias = ""
-        self.categorias = []
+        self.secciones = []
         self.configurar()
 
     def configurar(self):
@@ -32,13 +32,13 @@ class Diario(Medio):
                 continue
             if 'feed_noticias' in diario:
                 self.feed_noticias = diario['feed_noticias']
-            if 'categorias' in diario:
-                self.categorias = diario['categorias']
+            if 'secciones' in diario:
+                self.secciones = diario['secciones']
             if 'feeds' in diario:
-                self.categorias = []
+                self.secciones = []
                 for feed in diario['feeds']:
                     self.feeds[feed['tag']] = feed['url']
-                    self.categorias.append(feed['tag'])
+                    self.secciones.append(feed['tag'])
                     
     def leer(self):
         kiosco = Kiosco()
@@ -49,7 +49,7 @@ class Diario(Medio):
             for url_noticia, fecha in self.reconocer_urls_y_fechas_noticias(url_feed=url_feed):
                 if kiosco.bd.noticias.find(filter={'diario':self.etiqueta, 'url':url_noticia}).count() > 0: # si existe ya la noticia (url), no la decargo
                     continue
-                noticia = self.nueva_noticia(url=url_noticia, categoria=tag, diario=self.etiqueta)
+                noticia = self.nueva_noticia(url=url_noticia, seccion=tag, diario=self.etiqueta)
                 if noticia == None:
                     continue
                 if noticia.fecha == None:
@@ -67,7 +67,7 @@ class Diario(Medio):
             urls_y_fechas.append((entrada.link, fecha))
         return urls_y_fechas
 
-    def nueva_noticia(self, url, categoria, diario):
+    def nueva_noticia(self, url, seccion, diario):
         articulo = np.Article(url=url, language='es')
         try:
             articulo.download()
@@ -75,7 +75,7 @@ class Diario(Medio):
         except:
             return None
 
-        return Noticia(fecha=articulo.publish_date, url=url, diario=diario, categoria=categoria, titulo=articulo.title, texto=self.limpiar_texto(articulo.text))
+        return Noticia(fecha=articulo.publish_date, url=url, diario=diario, seccion=seccion, titulo=articulo.title, texto=self.limpiar_texto(articulo.text))
 
     def parsear_fecha(self, entrada):
         return dateutil.parser.parse(entrada.published)
