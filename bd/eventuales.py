@@ -1,5 +1,6 @@
 import json
 import datetime
+import os
 
 from pymongo import MongoClient
 
@@ -164,3 +165,13 @@ def discursos_freqs():
 
     bd = MongoClient(conexion).resultados
     bd.frecuencias_discursos.insert_many(buffer_resultado)
+
+    def noticias_faltantes_20210317_al_20210526():
+        dias_de_noticias = [d for d in os.listdir('/home/manu/Documentos/backups_dlm/20210317_20210526') if 'json' in d]
+        dias_de_noticias.sort()
+        for json_del_dia in dias_de_noticias:
+            notis = open('/home/manu/Documentos/backups_dlm/20210317_20210526/' + json_del_dia).readlines()
+            bd.frecuencias_discursos.insert_many(notis)
+
+
+
