@@ -29,7 +29,7 @@ diarios:
     descripcion: "Clarin"
     twitter: "@clarincom"
     hashtag: "#Clarin"
-    feed_noticias: "https://www.clarin.com/sitemap_google_news.xml"
+    feed_noticias: "https://www.clarin.com/contents/sitemap_news_{anio}_{mes}.xml"
     secciones:
       - "politica"
       - "economia"

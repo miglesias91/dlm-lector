@@ -19,6 +19,7 @@ class Clarin(Diario):
 
     def __init__(self):
         Diario.__init__(self, "clarin")
+        self.feed_noticias = self.feed_noticias.replace('{anio}', datetime.datetime.today().strftime('%Y')).replace('{mes}', datetime.datetime.today().strftime('%m'))
                     
     def leer(self):
         kiosco = Kiosco()
@@ -28,7 +29,7 @@ class Clarin(Diario):
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 
         i = 0
-        for url, fecha, titulo, seccion in entradas:
+        for url, fecha, seccion in entradas:
             
             i += 1
 
@@ -38,21 +39,20 @@ class Clarin(Diario):
                 continue
 
             print("descargando noticia " + str(i) + "/" + str(len(entradas)))
-            texto = self.parsear_noticia(url=url)
+            texto, titulo = self.parsear_noticia(url=url)
             if texto == None:
                 continue
             self.noticias.append(Noticia(fecha=fecha, url=url, diario=self.etiqueta, seccion=seccion, titulo=titulo, texto=texto))
 
     def entradas_feed(self):
-        urls_fechas_titulo_seccion = []
+        urls_fechas_seccion = []
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
         rss = urlopen(req)
         feed = bs(rss.read(), 'html.parser')
         for entrada in feed.find_all('url'):
              # creo objetos str xq sino mas adelante tira RecursionError.            
             url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
-            titulo = str(entrada.find('news:title').string)
+            fecha = dateutil.parser.parse(entrada.contents[3].text, ignoretz=True)
             seccion = str(url.split('/')[3])
 
             if seccion == "mundo":
@@ -61,9 +61,9 @@ class Clarin(Diario):
             if seccion not in self.secciones:
                 continue
 
-            urls_fechas_titulo_seccion.append((url, fecha, titulo, seccion))
+            urls_fechas_seccion.append((url, fecha, seccion))
             
-        return urls_fechas_titulo_seccion
+        return urls_fechas_seccion
 
     def parsear_noticia(self, url):
         articulo = np.Article(url=url, language='es')
@@ -73,7 +73,7 @@ class Clarin(Diario):
         except:
             return None
 
-        return self.limpiar_texto(articulo.text)
+        return self.limpiar_texto(articulo.text), articulo.title
 
     def limpiar_texto(self, texto):
         regexp = re.compile(r'[\n\s]Newsletters[^\n]+\n')
