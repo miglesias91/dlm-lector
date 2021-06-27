@@ -11,12 +11,13 @@ from pymongo.errors import OperationFailure, BulkWriteError
 
 from medios.diarios.noticia import Noticia
 
-from bd.resultados import Resultados
-from procesamiento.frecuenciasspacy import Frecuencias
-
 class Kiosco:
-    def __init__(self, fecha=None):
-        with open('conexiones-oracle.json') as c:
+    def __init__(self, conexiones=None):
+
+        if conexiones is None:
+            conexiones = 'conexiones-oracle.json'
+
+        with open(conexiones) as c:
             j = json.load(c)
             
         usuario = j['kiosco']['usuario']

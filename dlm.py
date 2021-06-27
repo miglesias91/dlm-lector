@@ -1,11 +1,5 @@
-from bd.eventuales import discursos_freqs
 import getopt, sys
-import time
-import json
 import datetime
-from collections import defaultdict
-import yaml
-import pathlib
 
 # from medios.diarios.diarios import Clarin, ElDestape, Infobae, LaNacion, PaginaDoce, CasaRosada
 from medios.diarios.clarin import Clarin
