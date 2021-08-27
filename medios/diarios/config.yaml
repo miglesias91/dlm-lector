@@ -78,7 +78,7 @@ diarios:
     descripcion: "Pagina 12"
     twitter: "@pagina12"
     hashtag: "#Pagina12"
-    feed_noticias: "https://www.pagina12.com.ar/breakingnews.xml"
+    feed_noticias: "https://www.pagina12.com.ar/breakingnews-short.xml"
     secciones:
       - "politica"
       - "economia"

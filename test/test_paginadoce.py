@@ -14,7 +14,7 @@ class TestPaginaDoce(unittest.TestCase):
 
     def test_parsear_noticia(self):
         p12 = PaginaDoce()
-        seccion, titulo, texto = p12.parsear_noticia(url="https://www.pagina12.com.ar/207920-ricky-martin-al-frente-de-las-manifestaciones-en-puerto-rico")
+        seccion, titulo, texto = p12.parsear_noticia(url="https://www.pagina12.com.ar/363980-el-concejo-deliberante-solicito-suspender-el-convenio-sobre-")
         return 1
 
     def test_parsear_seccion(self):
