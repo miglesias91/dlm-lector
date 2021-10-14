@@ -56,6 +56,10 @@ class ElDestape(Diario):
             titulo = str(entrada.find('news:title').string)
 
             signos = string.punctuation + "¡¿\n"
+
+            if (entrada.find('news:keywords') == None):
+                continue
+            
             seccion = str(entrada.find('news:keywords').string.translate(str.maketrans('áéíóúý', 'aeiouy', signos)).strip().lower())
 
             if seccion == "internacionales":
