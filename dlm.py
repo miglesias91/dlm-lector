@@ -92,15 +92,23 @@ def leer_medios(parametros):
 
     # medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular(), PaginaDoce(), DiarioDeLeuco()]
     medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Perfil(), Ambito(), TN(), CasaRosada(), PaginaDoce(), DiarioDeLeuco()]
-    
+    lecturas = {}
+
+    print('leyendo medios:')
     for medio in medios:
         if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
-           if leer_medio(medio):
+            resultado_lectura = leer_medio(medio)
+            lecturas[medio.etiqueta] = resultado_lectura
+
+
+    print('actualizando frecuencias:')
+    for medio in medios:
+        if medio.etiqueta in medios_a_leer or len(medios_a_leer) == 0:
+           if lecturas[medio.etiqueta]:
                if medio.etiqueta is 'casarosada':
                    actualizar_resultados_discursos(medio)
                    continue
                actualizar_resultados(medio)
-
 
 def usage(parametros):
     print("dlm-lector (dicenlosmedios scrapper) v1.0")
