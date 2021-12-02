@@ -7,8 +7,8 @@ import unittest
 import nltk
 from nltk.corpus import cess_esp
 
-from ia.txt import NLP
-from bd.kiosco import Kiosco
+# from ia.txt import NLP
+# from bd.kiosco import Kiosco
 
 class TestTXT(unittest.TestCase):
 
