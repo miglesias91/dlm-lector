@@ -60,9 +60,10 @@ class Frecuencias:
         for fecha, diarios in self.noticias.items():
             for diario, secciones in diarios.items():
                 for seccion, noticias in secciones.items():
+                    print('procesando noticias de ' + diario + '/' + seccion + '/' + fecha)
+
                     adj_tit, sus_tit, ver_tit, ent_tit, adj_txt, sus_txt, ver_txt, ent_txt = self.__noticias2freqs__(noticias)
 
-                    # resultado = {'fecha': fecha, 'diario': diario, 'seccion': seccion, 'total': len(noticias), 'ter_tit':f_ter_tit, 'ver_tit': f_ver_tit, 'per_tit': f_per_tit, 'ter_txt': f_ter_txt, 'ver_txt': f_ver_txt, 'per_txt': f_per_txt }
                     resultado = {
                         'fecha': fecha, 'diario': diario, 'seccion': seccion, 'total': len(noticias),
                         'adjtit': adj_tit, 'sustit': sus_tit, 'vertit': ver_tit, 'enttit': ent_tit, 
@@ -208,7 +209,10 @@ class Frecuencias:
         freq_entidades_titulo = {}
         freq_verbos_titulo = {}
 
+        total = len(noticias)
+        i = 1
         for noticia in noticias:
+            print('procesando noticia ' + str(i) + ' de ' + str(total))
 
             tokens_titulo, tokens_texto = self.tokens(noticia.titulo, noticia.texto)
 

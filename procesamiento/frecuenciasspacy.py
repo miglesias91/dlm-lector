@@ -40,6 +40,7 @@ class Frecuencias:
         for fecha, diarios in self.noticias.items():
             for diario, secciones in diarios.items():
                 for seccion, noticias in secciones.items():
+                    print('procesando noticias de ' + diario + '/' + seccion + '/' + fecha)
                     adjtit, sustit, vertit, enttit, adjtxt, sustxt, vertxt, enttxt = self.__noticias2freqs__(noticias)
 
                     resultado = {'fecha': fecha, 'diario': diario, 'seccion': seccion, 'total': len(noticias),
@@ -76,7 +77,11 @@ class Frecuencias:
         freq_verbos_titulo = {}
         freq_entidades_titulo = {}
 
+        total = len(noticias)
+        i = 1
         for noticia in noticias:
+
+            print('procesando noticia ' + str(i) + ' de ' + str(total))
 
             doc_texto = self.nlp(noticia.texto)
             doc_titulo = self.nlp(noticia.titulo)
@@ -100,6 +105,8 @@ class Frecuencias:
             freq_sustantivos_texto = Frecuencias.sumar_freqs(freq_sustantivos_texto, nuevas_freq_sustantivos_texto, 50)
             freq_verbos_texto = Frecuencias.sumar_freqs(freq_verbos_texto, nuevas_freq_verbos_texto, 15)
             freq_entidades_texto = Frecuencias.sumar_freqs(freq_entidades_texto, nuevas_freq_entidades_texto, 15)
+
+            i += 1
 
         return freq_adjetivos_titulo, freq_sustantivos_titulo, freq_verbos_titulo, freq_entidades_titulo, freq_adjetivos_texto, freq_sustantivos_texto, freq_verbos_texto, freq_entidades_texto
 
