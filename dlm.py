@@ -38,7 +38,7 @@ def leer_medios(parametros):
     medios_a_leer = set(parametros['medios'])
 
     # medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Telam(), Perfil(), Ambito(), TN(), CasaRosada(), Popular(), PaginaDoce(), DiarioDeLeuco()]
-    medios = [Clarin(), LaNacion(), ElDestape(), Infobae(), Perfil(), Ambito(), TN(), CasaRosada(), PaginaDoce(), DiarioDeLeuco()]
+    medios = [Clarin(), ElDestape(), Infobae(), Perfil(), Ambito(), TN(), CasaRosada(), PaginaDoce(), DiarioDeLeuco()]
 
     print('leyendo medios:')
     for medio in medios:

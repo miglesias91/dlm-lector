@@ -24,7 +24,7 @@ class PaginaDoce(Diario):
     def leer(self):
         kiosco = Kiosco()
 
-        entradas = self.entradas_feed()[0:40]
+        entradas = self.entradas_feed()[0:30]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 

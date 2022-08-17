@@ -27,7 +27,7 @@ class DiarioDeLeuco(Diario):
 
         # recupero las urls del dia de hoy, con la diferencia horario del servidor.
         # si no hay de hoy, me trae de ayer.
-        entradas = fp.parse(self.feed_noticias).entries[0:70]
+        entradas = fp.parse(self.feed_noticias).entries[0:10]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 

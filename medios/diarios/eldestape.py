@@ -26,7 +26,7 @@ class ElDestape(Diario):
 
         print("leyendo '" + self.etiqueta + "'...")
 
-        entradas = self.entradas_feed()[0:70]
+        entradas = self.entradas_feed()[0:20]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 

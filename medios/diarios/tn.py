@@ -25,7 +25,7 @@ class TN(Diario):
 
         tag_regexp = re.compile(r'<[^>]+>')
         
-        entradas = fp.parse(self.feed_noticias).entries[0:70]
+        entradas = fp.parse(self.feed_noticias).entries[0:30]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 

@@ -28,7 +28,7 @@ class Ambito(Diario):
         for seccion, url_feed in self.feeds.items():
 
             i = 0
-            entradas = self.entradas_feed(url_feed=url_feed)[0:5]
+            entradas = self.entradas_feed(url_feed=url_feed)[0:2]
             print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + seccion + "'...")
             for url, fecha, titulo in entradas:
 

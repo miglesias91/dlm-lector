@@ -29,7 +29,7 @@ class Telam(Diario):
 
             i = 0
 
-            entradas = self.entradas_feed(url_feed=url_feed)[0:5]
+            entradas = self.entradas_feed(url_feed=url_feed)[0:3]
 
             print("     " + str(len(entradas)) + " noticias de '" + self.etiqueta + "/" + seccion + "'...")
             for url, fecha, titulo in entradas:
