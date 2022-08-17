@@ -1,5 +1,5 @@
-apertium==0.2.3
-apertium-streamparser==5.0.2
+#apertium==0.2.3
+#apertium-streamparser==5.0.2
 beautifulsoup4==4.9.1
 blis==0.4.1
 boto3==1.14.49
