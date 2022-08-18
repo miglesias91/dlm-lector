@@ -52,7 +52,7 @@ class LaNacion(Diario):
             
             horas = int(entrada.contents[0].contents[0][:2])
             minutos = int(entrada.contents[0].contents[0][3:])
-            fecha = datetime.datetime.now().replace(hour = horas, minute = minutos, second = 0)
+            fecha = (datetime.datetime.now() + datetime.timedelta(hours = 1)).replace(hour = horas, minute = minutos, second = 0)
         
             titulo = entrada.contents[2].contents[0].text
             seccion = str(url.split('/')[3])
