@@ -23,7 +23,7 @@ class LaNacion(Diario):
     def leer(self):
         kiosco = Kiosco()
         
-        entradas = self.entradas_feed()[0:70]
+        entradas = self.entradas_feed()[0:30]
 
         print("leyendo " + str(len(entradas)) + " noticias de '" + self.etiqueta + "'...")
 
@@ -47,10 +47,14 @@ class LaNacion(Diario):
         urls_fechas_titulo_seccion = []
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
         feed = bs(urlopen(req).read(), 'html.parser')
-        for entrada in feed.find_all('url'):
-            url = str(entrada.loc.string)
-            fecha = dateutil.parser.parse(entrada.find('news:publication_date').string, ignoretz=True)
-            titulo = str(entrada.find('news:title').string)
+        for entrada in feed.find_all('article', ["mod-article"])[:30]:
+            url = 'https://www.lanacion.com.ar' + entrada.contents[2].contents[0].contents[0].attrs['href']
+            
+            horas = int(entrada.contents[0].contents[0][:2])
+            minutos = int(entrada.contents[0].contents[0][3:])
+            fecha = datetime.datetime.now().replace(hour = horas, minute = minutos, second = 0)
+        
+            titulo = entrada.contents[2].contents[0].text
             seccion = str(url.split('/')[3])
 
             if seccion == "el-mundo":

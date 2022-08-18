@@ -3,7 +3,7 @@ diarios:
     descripcion: "La Nacion"
     twitter: "@LANACION"
     hashtag: "#LaNacion"
-    feed_noticias: "https://www.lanacion.com.ar/ln-news.xml"
+    feed_noticias: "https://www.lanacion.com.ar/ultimas-noticias/"
     secciones:
       - "politica"
       - "economia"
