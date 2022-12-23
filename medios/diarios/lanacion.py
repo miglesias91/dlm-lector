@@ -47,24 +47,29 @@ class LaNacion(Diario):
         urls_fechas_titulo_seccion = []
         req = Request(self.feed_noticias, headers={'User-Agent': 'Mozilla/5.0'})
         feed = bs(urlopen(req).read(), 'html.parser')
+
         for entrada in feed.find_all('article', ["mod-article"])[:30]:
-            url = 'https://www.lanacion.com.ar' + entrada.contents[2].contents[0].contents[0].attrs['href']
+            try:
+                url = 'https://www.lanacion.com.ar' + entrada.contents[2].contents[0].contents[0].attrs['href']
+                
+                horas = int(entrada.contents[0].contents[0][:2])
+                minutos = int(entrada.contents[0].contents[0][3:])
+                fecha = (datetime.datetime.now() + datetime.timedelta(hours = 1)).replace(hour = horas, minute = minutos, second = 0)
             
-            horas = int(entrada.contents[0].contents[0][:2])
-            minutos = int(entrada.contents[0].contents[0][3:])
-            fecha = (datetime.datetime.now() + datetime.timedelta(hours = 1)).replace(hour = horas, minute = minutos, second = 0)
-        
-            titulo = entrada.contents[2].contents[0].text
-            seccion = str(url.split('/')[3])
+                titulo = entrada.contents[2].contents[0].text
+                seccion = str(url.split('/')[3])
 
-            if seccion == "el-mundo":
-                seccion = "internacional"
+                if seccion == "el-mundo":
+                    seccion = "internacional"
 
-            if seccion not in self.secciones:
+                if seccion not in self.secciones:
+                    continue
+
+                urls_fechas_titulo_seccion.append((url, fecha, titulo, seccion))
+            except:
+                print(f'error parseando {url}')
                 continue
-
-            urls_fechas_titulo_seccion.append((url, fecha, titulo, seccion))
-            
+         
         return urls_fechas_titulo_seccion
 
     def parsear_noticia(self, url):
